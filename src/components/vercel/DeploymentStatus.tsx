@@ -222,7 +222,7 @@ export default function DeploymentStatus({
           <div className="flex items-center gap-2 text-sm">
             <GitBranch className="h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">Branch:</span>
-            <span className="font-medium">{deployment.meta.githubCommitRef}</span>
+            <span className="font-medium">{String(deployment.meta.githubCommitRef)}</span>
           </div>
         ) : null}
 
