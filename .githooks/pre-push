@@ -1,0 +1,24 @@
+#!/bin/bash
+# .githooks/pre-push - Executa antes de fazer push
+
+echo "🔍 Running pre-push validation..."
+
+# Executa validações antes do push
+npm run type-check || {
+    echo "❌ Type check failed. Push aborted."
+    exit 1
+}
+
+npm run lint || {
+    echo "❌ Linting failed. Push aborted."
+    exit 1
+}
+
+# Testa build rapidamente
+npm run build > /dev/null || {
+    echo "❌ Build failed. Push aborted."
+    exit 1
+}
+
+echo "✅ Pre-push validation passed. Proceeding with push..."
+exit 0
