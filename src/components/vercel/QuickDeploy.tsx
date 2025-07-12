@@ -62,12 +62,6 @@ export default function QuickDeploy({
     message: '',
   });
 
-  useEffect(() => {
-    if (showProjectSelector) {
-      fetchProjects();
-    }
-  }, [showProjectSelector, fetchProjects]);
-
   const fetchProjects = useCallback(async () => {
     try {
       const response = await fetch('/api/vercel/projects');
@@ -82,6 +76,12 @@ export default function QuickDeploy({
       console.error('Error fetching projects:', error);
     }
   }, [selectedProject]);
+
+  useEffect(() => {
+    if (showProjectSelector) {
+      fetchProjects();
+    }
+  }, [showProjectSelector, fetchProjects]);
 
   const handleQuickDeploy = async () => {
     if (!selectedProject && !defaultProjectId) return;
