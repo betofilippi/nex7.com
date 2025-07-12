@@ -8,6 +8,19 @@ import {
   DeploymentNotifications,
   PipelineStage 
 } from '../../components/deploy';
+
+interface ErrorInfo {
+  id: string;
+  type: string;
+  message: string;
+  stackTrace: string;
+  timestamp: string;
+  context?: {
+    file?: string;
+    line?: number;
+    column?: number;
+  };
+}
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Button } from '../../components/ui/button';
@@ -17,7 +30,7 @@ import { useToast } from '../../hooks/use-toast';
 export default function DeployPage() {
   const { toast } = useToast();
   const [isDeploying, setIsDeploying] = useState(false);
-  const [currentError, setCurrentError] = useState<unknown>(null);
+  const [currentError, setCurrentError] = useState<ErrorInfo | undefined>(undefined);
   const [pipelineStages, setPipelineStages] = useState<PipelineStage[]>([
     { id: 'source', name: 'Source Code', status: 'pending' },
     { id: 'build', name: 'Build', status: 'pending' },
@@ -27,7 +40,7 @@ export default function DeployPage() {
 
   const startDeployment = () => {
     setIsDeploying(true);
-    setCurrentError(null);
+    setCurrentError(undefined);
     
     // Reset all stages
     setPipelineStages(stages => stages.map(stage => ({ ...stage, status: 'pending' })));
@@ -79,7 +92,7 @@ export default function DeployPage() {
 
   const resetDeployment = () => {
     setIsDeploying(false);
-    setCurrentError(null);
+    setCurrentError(undefined);
     setPipelineStages(stages => stages.map(stage => ({ 
       ...stage, 
       status: 'pending',
@@ -97,7 +110,7 @@ export default function DeployPage() {
 
   const handleFixApplied = (_fix: unknown) => {
     // Reset error and continue deployment
-    setCurrentError(null);
+    setCurrentError(undefined);
     toast({
       title: "Fix Applied",
       description: "Retrying deployment with the applied fix..."
