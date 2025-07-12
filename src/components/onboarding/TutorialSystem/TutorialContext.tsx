@@ -40,7 +40,7 @@ interface TutorialContextType {
 
 const TutorialContext = createContext<TutorialContextType | undefined>(undefined);
 
-// Mock tours for demonstration
+// Tutorial tours configuration
 const mockTours: TutorialTour[] = [
   {
     id: 'dashboard-overview',
