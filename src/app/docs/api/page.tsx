@@ -2,9 +2,27 @@
 
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+// Temporary replacements for missing UI components
+const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <div className={`border rounded-lg shadow-sm ${className}`}>{children}</div>
+);
+const CardHeader = ({ children }: { children: React.ReactNode }) => <div className="p-6 pb-0">{children}</div>;
+const CardTitle = ({ children }: { children: React.ReactNode }) => <h3 className="text-lg font-semibold">{children}</h3>;
+const CardDescription = ({ children }: { children: React.ReactNode }) => <p className="text-sm text-gray-600">{children}</p>;
+const CardContent = ({ children }: { children: React.ReactNode }) => <div className="p-6 pt-0">{children}</div>;
+const Badge = ({ children, variant = 'default' }: { children: React.ReactNode; variant?: string }) => (
+  <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">{children}</span>
+);
+const Button = ({ children, variant = 'default', onClick, className = '' }: { 
+  children: React.ReactNode; 
+  variant?: string; 
+  onClick?: () => void; 
+  className?: string;
+}) => (
+  <button onClick={onClick} className={`px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 ${className}`}>
+    {children}
+  </button>
+);
 import { ExternalLink, Download, RefreshCw } from 'lucide-react';
 
 // Type for SwaggerUI props
@@ -23,21 +41,31 @@ interface SwaggerUIProps {
   responseInterceptor?: (response: any) => any;
 }
 
-// Dynamically import SwaggerUI to avoid SSR issues
-const SwaggerUI = dynamic<SwaggerUIProps>(
-  () => import('swagger-ui-react') as any,
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    ),
-  }
-);
+// Dynamically import SwaggerUI - temporarily disabled due to missing dependency
+// const SwaggerUI = dynamic<SwaggerUIProps>(
+//   () => import('swagger-ui-react') as any,
+//   {
+//     ssr: false,
+//     loading: () => (
+//       <div className="flex items-center justify-center h-64">
+//         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+//       </div>
+//     ),
+//   }
+// );
 
-// Import Swagger UI styles
-import 'swagger-ui-react/swagger-ui.css';
+// Import Swagger UI styles - temporarily disabled
+// import 'swagger-ui-react/swagger-ui.css';
+
+// Temporary placeholder component
+const SwaggerUI = ({ spec }: { spec: any }) => (
+  <div className="border rounded-lg p-4 bg-gray-50">
+    <p className="text-gray-600">API Documentation temporarily unavailable</p>
+    <p className="text-sm text-gray-500 mt-2">
+      Install swagger-ui-react to enable full API documentation
+    </p>
+  </div>
+);
 
 export default function APIDocumentationPage() {
   const [spec, setSpec] = useState(null);

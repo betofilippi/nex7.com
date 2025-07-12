@@ -11,10 +11,14 @@
   "framework": "nextjs",
   "functions": {
     "src/app/api/**/*.ts": {
-      "maxDuration": 60
+      "runtime": "nodejs18.x",
+      "maxDuration": 30
     }
   },
   "regions": ["iad1"],
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "github": {
+    "autoDeployOnPush": false
+  }
 }
