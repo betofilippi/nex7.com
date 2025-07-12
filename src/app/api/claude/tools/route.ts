@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
           const result = await client.executeToolCall(
             toolName,
             toolInput,
-            TOOL_IMPLEMENTATIONS
+            TOOL_IMPLEMENTATIONS as Record<string, (input: unknown) => Promise<unknown>>
           );
           
           toolCalls.push({
