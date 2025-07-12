@@ -39,7 +39,7 @@ export async function signRefreshToken(payload: { userId: string }, expiresIn: s
 export async function verifyJWT(token: string): Promise<CustomJWTPayload> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as CustomJWTPayload;
+    return payload as unknown as CustomJWTPayload;
   } catch {
     throw new Error('Invalid token');
   }
@@ -48,7 +48,7 @@ export async function verifyJWT(token: string): Promise<CustomJWTPayload> {
 export async function verifyRefreshToken(token: string): Promise<{ userId: string }> {
   try {
     const { payload } = await jwtVerify(token, JWT_REFRESH_SECRET);
-    return payload as { userId: string };
+    return payload as unknown as { userId: string };
   } catch {
     throw new Error('Invalid refresh token');
   }
