@@ -3,7 +3,6 @@ import { findUserByEmail, validatePassword } from '../../../../lib/users';
 import { signJWT, signRefreshToken } from '../../../../lib/jwt';
 import { 
   createSecureApiHandler,
-  z,
   requestSchemas,
   auditLogin,
   getClientIdentifier,

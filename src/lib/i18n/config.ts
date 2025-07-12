@@ -1,4 +1,4 @@
-import { createSharedPathnamesNavigation } from 'next-intl/navigation';
+import { createNavigation } from 'next-intl/navigation';
 
 export const locales = ['en', 'es', 'pt', 'fr', 'de', 'ar'] as const;
 export type Locale = (typeof locales)[number];
@@ -16,7 +16,7 @@ export const localeNames: Record<Locale, string> = {
 
 export const rtlLocales: Locale[] = ['ar'];
 
-export const { Link, redirect, usePathname, useRouter } = createSharedPathnamesNavigation({
+export const { Link, redirect, usePathname, useRouter } = createNavigation({
   locales,
 });
 

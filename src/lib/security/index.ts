@@ -212,6 +212,7 @@ export function createSecureApiHandler(
 // Export common security utilities
 export { z } from 'zod';
 export { validators, requestSchemas, sanitizers } from './validation';
+export { getClientIdentifier, authRateLimiter, apiRateLimiter } from '../rate-limiter';
 
 // Initialize all security services
 export function initializeSecurity(): void {
