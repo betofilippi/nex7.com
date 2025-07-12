@@ -94,7 +94,7 @@ const MessageBubble: React.FC<{
 };
 
 export const AgentChat: React.FC<AgentChatProps> = ({
-  _conversationId,
+  conversationId,
   activeAgent,
   messages,
   onSendMessage,
