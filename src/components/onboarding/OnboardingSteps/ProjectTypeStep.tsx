@@ -159,7 +159,7 @@ const ProjectTypeStep: React.FC<ProjectTypeStepProps> = ({ data, updateData, onN
           animate={{ opacity: 1, y: 0 }}
           className="text-center text-sm text-muted-foreground mt-4"
         >
-          Excellent choice! Let's customize your {selectedType} project.
+          Excellent choice! Let&apos;s customize your {selectedType} project.
         </motion.div>
       )}
     </div>

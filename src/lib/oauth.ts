@@ -107,7 +107,7 @@ export async function getOAuthUserInfo(
       const emailResponse = await fetch('https://api.github.com/user/emails', { headers });
       if (emailResponse.ok) {
         const emails = await emailResponse.json();
-        const primaryEmail = emails.find((e: any) => e.primary);
+        const primaryEmail = emails.find((e: { primary: boolean; email: string }) => e.primary);
         email = primaryEmail?.email || emails[0]?.email;
       }
     }

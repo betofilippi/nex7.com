@@ -29,9 +29,7 @@ export const AgentSystemDemo: React.FC<AgentSystemDemoProps> = ({ apiKey }) => {
     suggestedAgent,
     sendMessage,
     switchAgent,
-    clearConversation,
-    setContext,
-    getContext
+    clearConversation
   } = useAgentManager({
     apiKey,
     initialAgentId: 'nexy',

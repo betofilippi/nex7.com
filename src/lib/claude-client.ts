@@ -11,7 +11,7 @@ export interface ClaudeTool {
   description: string;
   input_schema: {
     type: 'object';
-    properties: Record<string, any>;
+    properties: Record<string, unknown>;
     required?: string[];
   };
 }
@@ -155,9 +155,9 @@ export class ClaudeClient {
   // Tool execution wrapper
   async executeToolCall(
     toolName: string,
-    toolInput: any,
-    toolImplementations: Record<string, (input: any) => Promise<any>>
-  ): Promise<any> {
+    toolInput: unknown,
+    toolImplementations: Record<string, (input: unknown) => Promise<unknown>>
+  ): Promise<unknown> {
     const implementation = toolImplementations[toolName];
     if (!implementation) {
       throw new Error(`Tool ${toolName} not implemented`);

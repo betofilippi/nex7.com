@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     try {
       await jwtVerify(token, JWT_SECRET);
       isAuthenticated = true;
-    } catch (error) {
+    } catch {
       // Token is invalid or expired
       isAuthenticated = false;
     }

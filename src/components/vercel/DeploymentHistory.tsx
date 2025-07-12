@@ -84,7 +84,7 @@ export default function DeploymentHistory({
 
   useEffect(() => {
     fetchDeployments();
-  }, [projectId, limit]);
+  }, [projectId, limit, fetchDeployments]);
 
   const getRelativeTime = (timestamp: number) => {
     const now = Date.now();

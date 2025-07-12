@@ -69,7 +69,7 @@ const ExperienceLevelStep: React.FC<ExperienceLevelStepProps> = ({
             className="mx-auto mb-4"
           />
         </OnboardingTooltip>
-        <h2 className="text-2xl font-bold mb-2">What's your experience level?</h2>
+        <h2 className="text-2xl font-bold mb-2">What&apos;s your experience level?</h2>
         <p className="text-muted-foreground">
           This helps me customize your experience and provide the right level of guidance
         </p>
@@ -90,7 +90,7 @@ const ExperienceLevelStep: React.FC<ExperienceLevelStepProps> = ({
                   ? 'ring-2 ring-primary shadow-lg'
                   : 'hover:shadow-md'
               }`}
-              onClick={() => handleSelect(level.id as any)}
+              onClick={() => handleSelect(level.id as string)}
             >
               <CardContent className="p-6">
                 <div

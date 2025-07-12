@@ -39,14 +39,11 @@ export async function POST(request: NextRequest) {
     if (stream) {
       // Streaming response
       return streamSSE(async (send) => {
-        let fullResponse = '';
-        
         await agentManager.sendMessageStream(
           conversationId,
           message,
           agentId,
           (chunk) => {
-            fullResponse += chunk;
             send({ type: 'chunk', content: chunk });
           }
         );

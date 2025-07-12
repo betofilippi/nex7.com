@@ -5,7 +5,7 @@ import { EdgeProps, getBezierPath, EdgeLabelRenderer, BaseEdge } from 'reactflow
 import { motion } from 'framer-motion';
 
 const CustomEdge: React.FC<EdgeProps> = ({
-  id,
+  id: _id,
   sourceX,
   sourceY,
   targetX,

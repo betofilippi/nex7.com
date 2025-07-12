@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Mail, MessageSquare, Smartphone, Volume2, CheckCircle, XCircle, AlertCircle, Info, Settings } from 'lucide-react';
+import { Bell, Mail, MessageSquare, Smartphone, Volume2, CheckCircle, XCircle, AlertCircle, Info } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Switch } from '../ui/switch';
@@ -18,7 +18,7 @@ interface NotificationChannel {
   name: string;
   icon: React.ElementType;
   enabled: boolean;
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 interface NotificationEvent {
@@ -51,7 +51,6 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
 
   const [notifications, setNotifications] = useState<NotificationEvent[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [showNotifications, setShowNotifications] = useState(false);
 
   // Request browser notification permission
   useEffect(() => {
@@ -83,7 +82,7 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
     });
   };
 
-  const updateChannelConfig = (channelId: string, config: Record<string, any>) => {
+  const updateChannelConfig = (channelId: string, config: Record<string, unknown>) => {
     setChannels(prev => prev.map(channel =>
       channel.id === channelId
         ? { ...channel, config: { ...channel.config, ...config } }
@@ -91,7 +90,7 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
     ));
   };
 
-  const sendNotification = (event: Omit<NotificationEvent, 'id' | 'timestamp'>) => {
+  const sendNotification = useCallback((event: Omit<NotificationEvent, 'id' | 'timestamp'>) => {
     const notification: NotificationEvent = {
       ...event,
       id: Date.now().toString(),
@@ -132,7 +131,7 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
           break;
       }
     });
-  };
+  }, [channels, toast]);
 
   const markAsRead = (notificationId: string) => {
     setNotifications(prev => prev.map(n =>
@@ -179,7 +178,7 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
     }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [sendNotification]);
 
   return (
     <div className={cn("space-y-6", className)}>

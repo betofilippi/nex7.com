@@ -25,8 +25,8 @@ interface UseAgentManagerReturn {
   sendMessage: (message: string) => Promise<void>;
   switchAgent: (agentId: string) => void;
   clearConversation: () => void;
-  setContext: (key: string, value: any) => void;
-  getContext: (key: string) => any;
+  setContext: (key: string, value: unknown) => void;
+  getContext: (key: string) => unknown;
 }
 
 export const useAgentManager = ({
@@ -172,14 +172,14 @@ export const useAgentManager = ({
   }, [conversationId, activeAgentId]);
 
   // Context management
-  const setContext = useCallback((key: string, value: any) => {
+  const setContext = useCallback((key: string, value: unknown) => {
     if (!managerRef.current || !conversationId) {
       return;
     }
     managerRef.current.setContext(conversationId, key, value);
   }, [conversationId]);
 
-  const getContext = useCallback((key: string): any => {
+  const getContext = useCallback((key: string): unknown => {
     if (!managerRef.current || !conversationId) {
       return undefined;
     }

@@ -15,7 +15,7 @@ export interface AgentConversation {
   id: string;
   messages: AgentMessage[];
   activeAgentId: string;
-  context: Map<string, any>;
+  context: Map<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,7 +24,7 @@ export interface AgentCollaboration {
   fromAgent: string;
   toAgent: string;
   reason: string;
-  context: any;
+  context: Record<string, unknown>;
 }
 
 export class AgentManager {
@@ -49,7 +49,7 @@ export class AgentManager {
       id: conversationId,
       messages: [],
       activeAgentId,
-      context: new Map(),
+      context: new Map() as Map<string, unknown>,
       createdAt: new Date(),
       updatedAt: new Date()
     });
@@ -131,13 +131,13 @@ export class AgentManager {
     conversation.messages.push(userMessage);
 
     // Prepare messages for Claude with agent personality
-    const claudeMessages: ClaudeMessage[] = [
-      { role: 'user', content: agent.systemPrompt },
-      ...conversation.messages.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }))
-    ];
+    // const claudeMessages: ClaudeMessage[] = [
+    //   { role: 'user', content: agent.systemPrompt },
+    //   ...conversation.messages.map(msg => ({
+    //     role: msg.role,
+    //     content: msg.content
+    //   }))
+    // ];
 
     // Send to Claude
     const response = await this.claudeClient.sendMessage(
@@ -172,7 +172,7 @@ export class AgentManager {
         fromAgent: agent.id,
         toAgent: metadata.suggestedNextAgent,
         reason: 'Context suggests expertise needed',
-        context: { lastMessage: message }
+        context: { lastMessage: message } as Record<string, unknown>
       });
     }
 
@@ -319,7 +319,7 @@ export class AgentManager {
   }
 
   // Set context data
-  setContext(conversationId: string, key: string, value: any): void {
+  setContext(conversationId: string, key: string, value: unknown): void {
     const conversation = this.conversations.get(conversationId);
     if (conversation) {
       conversation.context.set(key, value);
@@ -328,7 +328,7 @@ export class AgentManager {
   }
 
   // Get context data
-  getContext(conversationId: string, key: string): any {
+  getContext(conversationId: string, key: string): unknown {
     const conversation = this.conversations.get(conversationId);
     return conversation ? conversation.context.get(key) : undefined;
   }

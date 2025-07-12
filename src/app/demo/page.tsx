@@ -52,15 +52,10 @@ import { useToast } from "../../hooks/use-toast"
 import { Toaster } from "../../components/ui/toaster"
 import { 
   AlertCircle, 
-  Check, 
   ChevronDown, 
   Home, 
   Settings, 
-  User,
-  Menu,
-  Bell,
-  Mail,
-  Search
+  User
 } from "lucide-react"
 
 export default function DemoPage() {

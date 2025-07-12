@@ -17,7 +17,6 @@ import {
   GitBranch,
   Zap,
   Settings,
-  ExternalLink,
 } from 'lucide-react';
 import { VercelProject } from '../../lib/vercel/client';
 import {
@@ -67,7 +66,7 @@ export default function QuickDeploy({
     if (showProjectSelector) {
       fetchProjects();
     }
-  }, [showProjectSelector]);
+  }, [showProjectSelector, fetchProjects]);
 
   const fetchProjects = async () => {
     try {

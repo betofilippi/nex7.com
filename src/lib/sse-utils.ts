@@ -13,7 +13,7 @@ export class SSEClient {
   async *streamQuery(
     message: string,
     conversationId?: string,
-    tools?: any[]
+    tools?: unknown[]
   ): AsyncGenerator<SSEMessage> {
     this.controller = new AbortController();
 
@@ -92,7 +92,7 @@ export function useSSEQuery() {
   const startStream = React.useCallback(async (
     message: string,
     conversationId?: string,
-    tools?: any[]
+    tools?: unknown[]
   ) => {
     if (clientRef.current) {
       clientRef.current.cancel();
@@ -148,12 +148,12 @@ export function useSSEQuery() {
 import React from 'react';
 
 // Server-side streaming utility
-export function streamSSE(callback: (send: (data: any) => void) => Promise<void>): Response {
+export function streamSSE(callback: (send: (data: unknown) => void) => Promise<void>): Response {
   const encoder = new TextEncoder();
   
   const stream = new ReadableStream({
     async start(controller) {
-      const send = (data: any) => {
+      const send = (data: unknown) => {
         const sseData = `data: ${JSON.stringify(data)}\n\n`;
         controller.enqueue(encoder.encode(sseData));
       };

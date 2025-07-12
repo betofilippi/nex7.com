@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Handle tool calls if any
-    const toolCalls: any[] = [];
+    const toolCalls: unknown[] = [];
     let finalContent = '';
 
     for (const content of response.content) {

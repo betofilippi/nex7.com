@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { findUserByEmail, validatePassword } from '../../../../lib/users';
-import { signJWT, signRefreshToken, setAuthCookies } from '../../../../lib/jwt';
+import { signJWT, signRefreshToken } from '../../../../lib/jwt';
 
 export async function POST(request: NextRequest) {
   try {

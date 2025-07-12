@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyJWT, getTokenFromCookies } from '../../../../lib/jwt';
+import { verifyJWT } from '../../../../lib/jwt';
 import { findUserById } from '../../../../lib/users';
 
 export async function GET(request: NextRequest) {

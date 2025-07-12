@@ -1,4 +1,4 @@
-import { Node, Edge, Connection } from 'reactflow';
+import { Node, Edge } from 'reactflow';
 
 export type NodeType = 'github' | 'claude' | 'vercel' | 'vercel-deploy' | 'vercel-project' | 'vercel-domain' | 'conditional';
 

@@ -19,7 +19,6 @@ import {
   Trash,
   ExternalLink,
   Activity,
-  Package,
 } from 'lucide-react';
 import {
   DropdownMenu,

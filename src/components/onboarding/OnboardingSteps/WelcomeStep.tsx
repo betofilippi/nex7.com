@@ -77,7 +77,7 @@ const WelcomeStep: React.FC<WelcomeStepProps> = ({ onNext }) => {
         variants={itemVariants}
         className="text-lg text-muted-foreground mb-8 max-w-md"
       >
-        I'm Nexy, your AI assistant. I'll help you set up your development environment
+        I&apos;m Nexy, your AI assistant. I&apos;ll help you set up your development environment
         and get you building amazing projects in no time!
       </motion.p>
 
@@ -102,7 +102,7 @@ const WelcomeStep: React.FC<WelcomeStepProps> = ({ onNext }) => {
       <motion.div variants={itemVariants} className="mt-auto">
         <Button size="lg" onClick={onNext} className="gap-2">
           <Sparkles className="w-5 h-5" />
-          Let's Get Started
+          Let&apos;s Get Started
         </Button>
       </motion.div>
     </motion.div>

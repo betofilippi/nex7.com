@@ -7,7 +7,7 @@ const execAsync = promisify(exec);
 
 export interface ToolResult {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
 }
 
@@ -94,7 +94,7 @@ export async function bashTool(input: { command: string; timeout?: number }): Pr
         stderr: stderr.trim(),
       }
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { 
       success: false, 
       error: error.message,
@@ -153,13 +153,13 @@ export async function grepTool(input: {
     if (exclude) command += ` --exclude="${exclude}"`;
     command += ` "${pattern}" "${searchPath}"`;
     
-    const { stdout, stderr } = await execAsync(command);
+    const { stdout } = await execAsync(command);
     
     return { 
       success: true, 
       data: stdout.trim().split('\n').filter(line => line),
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Grep returns exit code 1 when no matches found
     if (error.code === 1) {
       return { success: true, data: [] };

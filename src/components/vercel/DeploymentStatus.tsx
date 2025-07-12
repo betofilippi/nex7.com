@@ -73,7 +73,7 @@ const statusConfig = {
 
 export default function DeploymentStatus({ 
   deploymentId, 
-  projectId,
+  projectId: _projectId,
   onLogsClick,
   autoRefresh = true,
   refreshInterval = 5000 
@@ -117,7 +117,7 @@ export default function DeploymentStatus({
       const interval = setInterval(fetchDeployment, refreshInterval);
       return () => clearInterval(interval);
     }
-  }, [deploymentId, autoRefresh, refreshInterval, deployment?.state]);
+  }, [deploymentId, autoRefresh, refreshInterval, deployment?.state, fetchDeployment]);
 
   if (loading && !deployment) {
     return (

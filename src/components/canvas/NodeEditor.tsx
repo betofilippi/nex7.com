@@ -28,7 +28,7 @@ const NodeEditor: React.FC<NodeEditorProps> = ({ node, isOpen, onClose, onSave }
     }
   };
 
-  const updateNodeData = (field: string, value: any) => {
+  const updateNodeData = (field: string, value: unknown) => {
     if (editedNode) {
       setEditedNode({
         ...editedNode,

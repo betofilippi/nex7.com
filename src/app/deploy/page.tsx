@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   DeploymentPipeline, 
   DeploymentMonitor, 
@@ -17,7 +17,7 @@ import { useToast } from '../../hooks/use-toast';
 export default function DeployPage() {
   const { toast } = useToast();
   const [isDeploying, setIsDeploying] = useState(false);
-  const [currentError, setCurrentError] = useState<any>(null);
+  const [currentError, setCurrentError] = useState<unknown>(null);
   const [pipelineStages, setPipelineStages] = useState<PipelineStage[]>([
     { id: 'source', name: 'Source Code', status: 'pending' },
     { id: 'build', name: 'Build', status: 'pending' },
@@ -95,7 +95,7 @@ export default function DeployPage() {
     });
   };
 
-  const handleFixApplied = (fix: any) => {
+  const handleFixApplied = (_fix: unknown) => {
     // Reset error and continue deployment
     setCurrentError(null);
     toast({

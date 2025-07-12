@@ -171,7 +171,7 @@ export const AgentPersonality: React.FC<AgentPersonalityProps> = ({
           <div className="mb-6">
             <h4 className="text-sm font-medium text-gray-700 mb-2">Speaking Style</h4>
             <p className="text-sm text-gray-600 italic">
-              "{agent.personality.speakingStyle}"
+              &ldquo;{agent.personality.speakingStyle}&rdquo;
             </p>
           </div>
 

@@ -24,7 +24,7 @@ interface SetupCompleteStepProps {
 }
 
 const SetupCompleteStep: React.FC<SetupCompleteStepProps> = ({ data, onNext }) => {
-  const [showConfetti, setShowConfetti] = useState(false);
+  const [, setShowConfetti] = useState(false);
 
   useEffect(() => {
     // Trigger confetti after component mounts
@@ -111,7 +111,7 @@ const SetupCompleteStep: React.FC<SetupCompleteStepProps> = ({ data, onNext }) =
         transition={{ delay: 0.4 }}
         className="text-lg text-muted-foreground mb-6"
       >
-        Your project "{data.projectName}" is ready to go!
+        Your project &ldquo;{data.projectName}&rdquo; is ready to go!
       </motion.p>
 
       <motion.div

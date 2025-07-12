@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, Sparkles, Code2, CheckCircle, XCircle, RefreshCw, Gauge } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { AlertTriangle, Sparkles, Code2, CheckCircle, RefreshCw, Gauge } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
@@ -62,7 +62,7 @@ const AutoRecovery: React.FC<AutoRecoveryProps> = ({
   const [analysisProgress, setAnalysisProgress] = useState(0);
 
   // Simulate error analysis with Claude
-  const analyzeError = async () => {
+  const analyzeError = useCallback(async () => {
     if (!error) return;
 
     setIsAnalyzing(true);
@@ -149,13 +149,13 @@ const AutoRecovery: React.FC<AutoRecoveryProps> = ({
         description: `Found ${mockFixes.length} potential fixes for the error.`
       });
     }, 2500);
-  };
+  }, [error, toast]);
 
   useEffect(() => {
     if (error) {
       analyzeError();
     }
-  }, [error]);
+  }, [error, analyzeError]);
 
   const applyFix = async (fix: SuggestedFix) => {
     setIsApplyingFix(true);

@@ -32,7 +32,7 @@ export interface VercelDeployment {
     code: string;
     message: string;
   };
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
 }
 
 export interface VercelDomain {
@@ -336,7 +336,7 @@ class VercelClient {
           try {
             const log = JSON.parse(line);
             yield log;
-          } catch (e) {
+          } catch {
             // Skip invalid JSON lines
           }
         }

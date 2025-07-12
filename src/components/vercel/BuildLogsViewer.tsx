@@ -13,8 +13,6 @@ import {
   Play,
   AlertCircle,
   Copy,
-  Maximize2,
-  Filter,
 } from 'lucide-react';
 import { VercelBuildLog } from '../../lib/vercel/client';
 import {
@@ -113,7 +111,7 @@ export default function BuildLogsViewer({
     return () => {
       stopStreaming();
     };
-  }, [deploymentId]);
+  }, [deploymentId, fetchLogs, startStreaming]);
 
   useEffect(() => {
     if (autoScroll && scrollRef.current && !paused) {

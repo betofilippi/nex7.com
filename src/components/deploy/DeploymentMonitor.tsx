@@ -62,12 +62,12 @@ interface DeploymentRecord {
 
 interface DeploymentMonitorProps {
   deploymentId?: string;
-  onErrorDetected?: (error: any) => void;
+  onErrorDetected?: (error: unknown) => void;
   className?: string;
 }
 
 const DeploymentMonitor: React.FC<DeploymentMonitorProps> = ({
-  deploymentId,
+  deploymentId: _deploymentId,
   onErrorDetected,
   className
 }) => {
@@ -75,7 +75,7 @@ const DeploymentMonitor: React.FC<DeploymentMonitorProps> = ({
   const logsEndRef = useRef<HTMLDivElement>(null);
   const [logs, setLogs] = useState<BuildLog[]>([]);
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([]);
-  const [deploymentHistory, setDeploymentHistory] = useState<DeploymentRecord[]>([]);
+  const [, ] = useState<DeploymentRecord[]>([]);
   const [isLive, setIsLive] = useState(true);
   const [selectedTab, setSelectedTab] = useState('logs');
 

@@ -183,7 +183,7 @@ const ProjectDetailsStep: React.FC<ProjectDetailsStepProps> = ({
           <div className="flex items-start gap-2 text-xs text-muted-foreground">
             <Info className="w-3 h-3 mt-0.5" />
             <span>
-              Describe your vision naturally. I'll help configure everything based on your
+              Describe your vision naturally. I&apos;ll help configure everything based on your
               description.
             </span>
           </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -52,9 +53,11 @@ export default function DashboardPage() {
                 {user?.picture && (
                   <div>
                     <span className="font-medium">Profile Picture:</span>
-                    <img 
+                    <Image 
                       src={user.picture} 
                       alt="Profile" 
+                      width={80}
+                      height={80}
                       className="mt-2 h-20 w-20 rounded-full"
                     />
                   </div>

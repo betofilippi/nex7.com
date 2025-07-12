@@ -130,12 +130,12 @@ export async function POST(request: NextRequest) {
 
     // Store webhook data for monitoring dashboard
     // This would typically be stored in a database
-    const webhookData = {
-      event,
-      timestamp: new Date().toISOString(),
-      repository: payload.repository?.full_name,
-      payload
-    };
+    // const webhookData = {
+    //   event,
+    //   timestamp: new Date().toISOString(),
+    //   repository: payload.repository?.full_name,
+    //   payload
+    // };
 
     // Example: Store in database or send to monitoring service
     // await storeWebhookEvent(webhookData);

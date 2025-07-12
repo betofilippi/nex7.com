@@ -94,7 +94,7 @@ const MessageBubble: React.FC<{
 };
 
 export const AgentChat: React.FC<AgentChatProps> = ({
-  conversationId,
+  _conversationId,
   activeAgent,
   messages,
   onSendMessage,
@@ -140,6 +140,7 @@ export const AgentChat: React.FC<AgentChatProps> = ({
   const agentsMap: Record<string, Agent> = {};
   messages.forEach(msg => {
     if (msg.agentId && msg.agentId !== 'user') {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const agent = require('../../lib/agents/definitions').agents[msg.agentId];
       if (agent) {
         agentsMap[msg.agentId] = agent;
