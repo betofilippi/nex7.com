@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
       userInfo.email,
       userInfo.name,
       'github',
-      userInfo.picture
+      userInfo.picture,
+      userInfo.id?.toString()
     );
 
     // Generate JWT tokens

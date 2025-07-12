@@ -62,7 +62,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(result);
     }
 
-    // Create new deployment
+    // Handle GitHub deployment
+    if (action === 'deploy-from-github') {
+      const { projectId, gitBranch = 'main', gitCommit } = params;
+      
+      if (!projectId) {
+        return NextResponse.json(
+          { error: 'Project ID is required for GitHub deployment' },
+          { status: 400 }
+        );
+      }
+
+      // Get project details
+      const project = await client.getProject(projectId);
+      
+      if (!project.gitRepository) {
+        return NextResponse.json(
+          { error: 'Project is not connected to a Git repository' },
+          { status: 400 }
+        );
+      }
+
+      // Trigger deployment from GitHub
+      const deployment = await client.createDeployment({
+        name: project.name,
+        project: projectId,
+        target: params.target || 'production',
+        gitSource: {
+          type: project.gitRepository.type,
+          ref: gitBranch,
+          sha: gitCommit,
+        },
+        meta: {
+          githubCommitRef: gitBranch,
+          githubCommitSha: gitCommit,
+          githubDeployment: '1',
+        },
+        files: [], // Empty for Git deployments
+      } as any);
+
+      return NextResponse.json(deployment);
+    }
+
+    // Create new deployment from files
     if (!params.name || !params.files) {
       return NextResponse.json(
         { error: 'Name and files are required for deployment' },

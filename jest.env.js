@@ -1,0 +1,13 @@
+// Mock environment variables for testing
+process.env.NEXTAUTH_SECRET = 'test-secret'
+process.env.NEXTAUTH_URL = 'http://localhost:3000'
+process.env.DATABASE_URL = 'file:./test.db'
+process.env.ANTHROPIC_API_KEY = 'test-anthropic-key'
+process.env.VERCEL_TOKEN = 'test-vercel-token'
+process.env.GITHUB_TOKEN = 'test-github-token'
+process.env.GOOGLE_CLIENT_ID = 'test-google-client-id'
+process.env.GOOGLE_CLIENT_SECRET = 'test-google-client-secret'
+process.env.GITHUB_CLIENT_ID = 'test-github-client-id'
+process.env.GITHUB_CLIENT_SECRET = 'test-github-client-secret'
+process.env.JWT_SECRET = 'test-jwt-secret'
+process.env.NODE_ENV = 'test'

@@ -1,21 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { findUserByEmail, validatePassword } from '../../../../lib/users';
 import { signJWT, signRefreshToken } from '../../../../lib/jwt';
+import { 
+  createSecureApiHandler,
+  z,
+  requestSchemas,
+  auditLogin,
+  getClientIdentifier,
+  authRateLimiter
+} from '../../../../lib/security';
 
-export async function POST(request: NextRequest) {
-  try {
-    const { email, password } = await request.json();
+export const POST = createSecureApiHandler(
+  async (request: NextRequest) => {
+    try {
+      const body = await request.json();
+      const validatedData = requestSchemas.login.parse(body);
+      const { email, password } = validatedData;
+      
+      // Get client info for audit
+      const ipAddress = getClientIdentifier(request);
+      const userAgent = request.headers.get('user-agent') || 'unknown';
 
-    if (!email || !password) {
+    // Rate limit check specifically for auth endpoints
+    const identifier = `auth:${ipAddress}:${email}`;
+    const rateLimitResult = await authRateLimiter.checkLimit(identifier, false);
+    
+    if (!rateLimitResult.allowed) {
+      await auditLogin('', email, ipAddress, userAgent, false, 'Rate limit exceeded');
       return NextResponse.json(
-        { message: 'Email and password are required' },
-        { status: 400 }
+        {
+          error: 'Too many login attempts',
+          message: `Please try again after ${rateLimitResult.retryAfter} seconds`,
+          retryAfter: rateLimitResult.retryAfter,
+        },
+        { status: 429 }
       );
     }
 
     // Find user
     const user = await findUserByEmail(email);
     if (!user) {
+      await auditLogin('', email, ipAddress, userAgent, false, 'User not found');
+      // Count failed attempt for rate limiting
+      await authRateLimiter.checkLimit(identifier, false, false);
       return NextResponse.json(
         { message: 'Invalid credentials' },
         { status: 401 }
@@ -25,6 +52,9 @@ export async function POST(request: NextRequest) {
     // Validate password
     const isValid = await validatePassword(user, password);
     if (!isValid) {
+      await auditLogin(user.id, email, ipAddress, userAgent, false, 'Invalid password');
+      // Count failed attempt for rate limiting
+      await authRateLimiter.checkLimit(identifier, false, false);
       return NextResponse.json(
         { message: 'Invalid credentials' },
         { status: 401 }
@@ -69,6 +99,12 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
     });
+    
+    // Audit successful login
+    await auditLogin(user.id, email, ipAddress, userAgent, true);
+    
+    // Reset rate limit on successful login
+    await authRateLimiter.reset(identifier);
 
     return response;
   } catch (error) {
@@ -78,4 +114,12 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+},
+{
+  rateLimit: false, // We handle rate limiting manually for auth
+  csrf: false, // Login doesn't need CSRF
+  validation: requestSchemas.login,
+  audit: true,
+  securityHeaders: true,
 }
+);

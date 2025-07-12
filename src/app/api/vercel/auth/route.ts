@@ -5,10 +5,10 @@ import crypto from 'crypto';
 
 const VERCEL_CLIENT_ID = process.env.VERCEL_CLIENT_ID!;
 const VERCEL_CLIENT_SECRET = process.env.VERCEL_CLIENT_SECRET!;
-const VERCEL_REDIRECT_URI = process.env.VERCEL_REDIRECT_URI || 'http://localhost:3000/api/vercel/auth/callback';
+const VERCEL_REDIRECT_URI = process.env.VERCEL_REDIRECT_URI || 'http://localhost:3000/api/vercel/callback';
 
 // Store state temporarily (in production, use a proper store like Redis)
-const stateStore = new Map<string, { timestamp: number }>();
+export const stateStore = new Map<string, { timestamp: number }>();
 
 // Clean up old states every hour
 setInterval(() => {
@@ -39,55 +39,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(authUrl);
   }
 
-  if (action === 'callback') {
-    const code = searchParams.get('code');
-    const state = searchParams.get('state');
-
-    if (!code || !state) {
-      return NextResponse.json(
-        { error: 'Missing code or state parameter' },
-        { status: 400 }
-      );
-    }
-
-    // Verify state
-    if (!stateStore.has(state)) {
-      return NextResponse.json(
-        { error: 'Invalid state parameter' },
-        { status: 400 }
-      );
-    }
-    stateStore.delete(state);
-
-    try {
-      // Exchange code for token
-      const tokenData = await VercelClient.exchangeCodeForToken(
-        code,
-        VERCEL_CLIENT_ID,
-        VERCEL_CLIENT_SECRET,
-        VERCEL_REDIRECT_URI
-      );
-
-      // Store token in secure HTTP-only cookie
-      const cookieStore = await cookies();
-      cookieStore.set('vercel_token', tokenData.access_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: '/',
-      });
-
-      // Redirect to dashboard or success page
-      return NextResponse.redirect(new URL('/dashboard?vercel=connected', request.url));
-    } catch (error) {
-      console.error('Vercel OAuth error:', error);
-      return NextResponse.json(
-        { error: 'Failed to authenticate with Vercel' },
-        { status: 500 }
-      );
-    }
-  }
 
   if (action === 'logout') {
     // Remove token cookie

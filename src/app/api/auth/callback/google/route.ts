@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
       userInfo.email,
       userInfo.name,
       'google',
-      userInfo.picture
+      userInfo.picture,
+      userInfo.id
     );
 
     // Generate JWT tokens

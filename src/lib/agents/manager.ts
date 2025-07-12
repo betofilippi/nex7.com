@@ -1,5 +1,11 @@
 import { ClaudeClient, ClaudeMessage } from '../claude-client';
 import { Agent, agents, findBestAgentForContext } from './definitions';
+import { BaseAgent } from './base-agent';
+import { NexyAgent } from './nexy-agent';
+import { DevAgent } from './dev-agent';
+import { DesignerAgent } from './designer-agent';
+import { TeacherAgent } from './teacher-agent';
+import { DebuggerAgent } from './debugger-agent';
 
 export interface AgentMessage extends ClaudeMessage {
   agentId: string;
@@ -8,6 +14,8 @@ export interface AgentMessage extends ClaudeMessage {
     mood?: string;
     confidence?: number;
     suggestedNextAgent?: string;
+    toolsUsed?: string[];
+    memoryAccessed?: boolean;
   };
 }
 
@@ -32,12 +40,31 @@ export class AgentManager {
   private conversations: Map<string, AgentConversation>;
   private activeAgents: Map<string, Agent>;
   private collaborationQueue: AgentCollaboration[];
+  private agentInstances: Map<string, BaseAgent>;
+  private userId?: string;
 
   constructor(claudeClient: ClaudeClient) {
     this.claudeClient = claudeClient;
     this.conversations = new Map();
     this.activeAgents = new Map();
     this.collaborationQueue = [];
+    this.agentInstances = new Map();
+    this.initializeAgents();
+  }
+
+  private initializeAgents() {
+    // Initialize all agent instances
+    this.agentInstances.set('nexy', new NexyAgent(agents.nexy, this.claudeClient));
+    this.agentInstances.set('dev', new DevAgent(agents.dev, this.claudeClient));
+    this.agentInstances.set('designer', new DesignerAgent(agents.designer, this.claudeClient));
+    this.agentInstances.set('teacher', new TeacherAgent(agents.teacher, this.claudeClient));
+    this.agentInstances.set('debugger', new DebuggerAgent(agents.debugger, this.claudeClient));
+  }
+
+  setUserId(userId: string) {
+    this.userId = userId;
+    // Update all agent instances with user ID
+    this.agentInstances.forEach(agent => agent.setUserId(userId));
   }
 
   // Create a new agent conversation
@@ -139,10 +166,20 @@ export class AgentManager {
     //   }))
     // ];
 
-    // Send to Claude
-    const response = await this.claudeClient.sendMessage(
+    // Get the appropriate agent instance
+    const agentInstance = this.agentInstances.get(agentId);
+    if (!agentInstance) {
+      throw new Error(`Agent instance not found: ${agentId}`);
+    }
+
+    // Set conversation context
+    agentInstance.setConversationId(conversationId);
+
+    // Send message through the agent with its tools
+    const response = await agentInstance.sendMessage(
       message,
-      conversationId
+      conversationId,
+      true // Include tools
     );
 
     // Extract response content
@@ -206,22 +243,24 @@ export class AgentManager {
     };
     conversation.messages.push(userMessage);
 
-    // Stream from Claude
-    const stream = await this.claudeClient.sendMessageStream(
+    // Get the appropriate agent instance
+    const agentInstance = this.agentInstances.get(agentId);
+    if (!agentInstance) {
+      throw new Error(`Agent instance not found: ${agentId}`);
+    }
+
+    // Set conversation context
+    agentInstance.setConversationId(conversationId);
+
+    // Stream from agent with its tools
+    const fullResponse = await agentInstance.sendMessageStream(
       message,
-      conversationId
+      conversationId,
+      onChunk,
+      true // Include tools
     );
 
-    let fullResponse = '';
-    
-    for await (const event of stream) {
-      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-        fullResponse += event.delta.text;
-        if (onChunk) {
-          onChunk(event.delta.text);
-        }
-      }
-    }
+    // fullResponse is already populated by agentInstance.sendMessageStream
 
     // Create agent message
     const agentMessage: AgentMessage = {
@@ -264,7 +303,9 @@ export class AgentManager {
   private analyzeResponse(response: string, agent: Agent): AgentMessage['metadata'] {
     const metadata: AgentMessage['metadata'] = {
       mood: 'neutral',
-      confidence: 0.8
+      confidence: 0.8,
+      toolsUsed: [],
+      memoryAccessed: false
     };
 
     // Simple mood detection based on response patterns

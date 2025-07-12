@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 
@@ -36,6 +36,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const refreshSession = useCallback(async () => {
+    try {
+      const response = await fetch('/api/auth/refresh', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        const { user: userData } = await response.json();
+        setUser(userData);
+      } else {
+        setUser(null);
+        deleteCookie('auth-token');
+        deleteCookie('refresh-token');
+      }
+    } catch (error) {
+      console.error('Failed to refresh session:', error);
+      setUser(null);
+    }
+  }, []);
+
   const fetchUser = useCallback(async () => {
     try {
       const token = getCookie('auth-token');
@@ -66,33 +86,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  const refreshSession = async () => {
-    try {
-      const response = await fetch('/api/auth/refresh', {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        const { user: userData } = await response.json();
-        setUser(userData);
-      } else {
-        setUser(null);
-        deleteCookie('auth-token');
-        deleteCookie('refresh-token');
-      }
-    } catch (error) {
-      console.error('Failed to refresh session:', error);
-      setUser(null);
-    }
-  };
+  }, [refreshSession]);
 
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
@@ -109,9 +109,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { user: userData } = await response.json();
     setUser(userData);
     router.push('/');
-  };
+  }, [router]);
 
-  const signup = async (email: string, password: string, name: string) => {
+  const signup = useCallback(async (email: string, password: string, name: string) => {
     const response = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: {
@@ -128,9 +128,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { user: userData } = await response.json();
     setUser(userData);
     router.push('/');
-  };
+  }, [router]);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
@@ -143,29 +143,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       deleteCookie('refresh-token');
       router.push('/login');
     }
-  };
+  }, [router]);
 
-  const loginWithOAuth = (provider: 'google' | 'github') => {
+  const loginWithOAuth = useCallback((provider: 'google' | 'github') => {
     // Generate state for CSRF protection
     const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     setCookie('oauth-state', state, { maxAge: 60 * 10 }); // 10 minutes
     
     // Redirect to OAuth provider
     window.location.href = `/api/auth/oauth/${provider}?state=${state}`;
-  };
+  }, []);
+
+  const value = useMemo(() => ({
+    user,
+    loading,
+    login,
+    signup,
+    logout,
+    refreshSession,
+    loginWithOAuth,
+  }), [user, loading, login, signup, logout, refreshSession, loginWithOAuth]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        login,
-        signup,
-        logout,
-        refreshSession,
-        loginWithOAuth,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

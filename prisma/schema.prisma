@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model with OAuth support
+model User {
+  id              String           @id @default(cuid())
+  email           String           @unique
+  name            String?
+  image           String?
+  emailVerified   DateTime?
+  hashedPassword  String?
+  provider        String?          // OAuth provider (google, github, etc.)
+  providerId      String?          // OAuth provider user ID
+  role            Role             @default(USER)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  sessions        Session[]
+  conversations   Conversation[]
+  projects        Project[]
+  workflows       Workflow[]
+  deployments     Deployment[]
+  agentMemories   AgentMemory[]
+  
+  @@index([email])
+  @@index([provider, providerId])
+}
+
+// Session model for JWT token management
+model Session {
+  id              String           @id @default(cuid())
+  sessionToken    String           @unique
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires         DateTime
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  @@index([userId])
+  @@index([sessionToken])
+}
+
+// Conversation model for Claude conversations
+model Conversation {
+  id              String           @id @default(cuid())
+  title           String
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model           String           @default("claude-3-opus-20240229")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  messages        Message[]
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Message model for conversation messages
+model Message {
+  id              String           @id @default(cuid())
+  conversationId  String
+  conversation    Conversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role            MessageRole
+  content         String           @db.Text
+  attachments     Json?            // Store file attachments as JSON
+  metadata        Json?            // Store additional metadata as JSON
+  createdAt       DateTime         @default(now())
+  
+  @@index([conversationId])
+  @@index([createdAt])
+}
+
+// Project model for user projects
+model Project {
+  id              String           @id @default(cuid())
+  name            String
+  description     String?
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  framework       String?          // nextjs, react, vue, etc.
+  repository      String?          // GitHub repository URL
+  status          ProjectStatus    @default(ACTIVE)
+  settings        Json?            // Project-specific settings
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  deployments     Deployment[]
+  workflows       Workflow[]
+  
+  @@index([userId])
+  @@index([status])
+}
+
+// Deployment model for Vercel deployments
+model Deployment {
+  id              String           @id @default(cuid())
+  projectId       String
+  project         Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deploymentId    String           @unique // Vercel deployment ID
+  url             String?
+  status          DeploymentStatus @default(PENDING)
+  environment     String           @default("production")
+  metadata        Json?            // Vercel deployment metadata
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  @@index([projectId])
+  @@index([userId])
+  @@index([deploymentId])
+  @@index([status])
+}
+
+// Workflow model for canvas workflows
+model Workflow {
+  id              String           @id @default(cuid())
+  name            String
+  description     String?
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId       String?
+  project         Project?         @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  isPublic        Boolean          @default(false)
+  metadata        Json?            // Workflow metadata (viewport, zoom, etc.)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  nodes           WorkflowNode[]
+  edges           WorkflowEdge[]
+  
+  @@index([userId])
+  @@index([projectId])
+  @@index([isPublic])
+}
+
+// WorkflowNode model
+model WorkflowNode {
+  id              String           @id @default(cuid())
+  workflowId      String
+  workflow        Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  type            String           // Node type (ai, code, api, etc.)
+  position        Json             // { x: number, y: number }
+  data            Json             // Node-specific data
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  sourceEdges     WorkflowEdge[]   @relation("SourceNode")
+  targetEdges     WorkflowEdge[]   @relation("TargetNode")
+  
+  @@index([workflowId])
+}
+
+// WorkflowEdge model
+model WorkflowEdge {
+  id              String           @id @default(cuid())
+  workflowId      String
+  workflow        Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  sourceId        String
+  source          WorkflowNode     @relation("SourceNode", fields: [sourceId], references: [id], onDelete: Cascade)
+  targetId        String
+  target          WorkflowNode     @relation("TargetNode", fields: [targetId], references: [id], onDelete: Cascade)
+  sourceHandle    String?
+  targetHandle    String?
+  type            String           @default("default")
+  data            Json?            // Edge-specific data
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  @@index([workflowId])
+  @@index([sourceId])
+  @@index([targetId])
+}
+
+// AgentMemory model for agent context
+model AgentMemory {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentId         String           // Identifier for different agents
+  key             String           // Memory key
+  value           Json             // Memory value (can be complex data)
+  metadata        Json?            // Additional metadata
+  expiresAt       DateTime?        // Optional expiration
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  @@unique([userId, agentId, key])
+  @@index([userId])
+  @@index([agentId])
+  @@index([expiresAt])
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
+enum DeploymentStatus {
+  PENDING
+  BUILDING
+  READY
+  ERROR
+  CANCELED
+}

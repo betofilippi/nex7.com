@@ -1,3 +1,12 @@
 export { default as VercelDeployNode } from './VercelDeployNode';
 export { default as VercelProjectNode } from './VercelProjectNode';
 export { default as VercelDomainNode } from './VercelDomainNode';
+export { DatabaseNode } from './DatabaseNode';
+export { ApiNode } from './ApiNode';
+export { LoopNode } from './LoopNode';
+export { TransformNode } from './TransformNode';
+export { ScheduleNode } from './ScheduleNode';
+export { WebhookNode } from './WebhookNode';
+export { EmailNode } from './EmailNode';
+export { NotificationNode } from './NotificationNode';
+export { AITaskNode } from './AITaskNode';

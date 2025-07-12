@@ -3,14 +3,20 @@ import { getClaudeClient } from '../../../../lib/claude-client';
 import { getAgentManager } from '../../../../lib/agents/manager';
 import { getAgent } from '../../../../lib/agents/definitions';
 import { streamSSE } from '../../../../lib/sse-utils';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../auth/[...nextauth]/route';
 
 export async function POST(request: NextRequest) {
   try {
-    const { conversationId, message, agentId, stream = false } = await request.json();
+    // Get user session
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
 
-    if (!conversationId || !message) {
+    const { conversationId, message, agentId, stream = false, createNew = false } = await request.json();
+
+    if (!message) {
       return NextResponse.json(
-        { error: 'conversationId and message are required' },
+        { error: 'message is required' },
         { status: 400 }
       );
     }
@@ -28,6 +34,17 @@ export async function POST(request: NextRequest) {
     const claudeClient = getClaudeClient(apiKey);
     const agentManager = getAgentManager(claudeClient);
 
+    // Set user ID if available
+    if (userId) {
+      agentManager.setUserId(userId);
+    }
+
+    // Create new conversation if requested
+    let activeConversationId = conversationId;
+    if (createNew || !conversationId) {
+      activeConversationId = agentManager.createConversation(agentId);
+    }
+
     // Validate agent exists
     if (agentId && !getAgent(agentId)) {
       return NextResponse.json(
@@ -40,7 +57,7 @@ export async function POST(request: NextRequest) {
       // Streaming response
       return streamSSE(async (send) => {
         await agentManager.sendMessageStream(
-          conversationId,
+          activeConversationId,
           message,
           agentId,
           (chunk) => {
@@ -49,18 +66,31 @@ export async function POST(request: NextRequest) {
         );
 
         // Send final message with metadata
-        const finalMessage = agentManager.getConversationHistory(conversationId).pop();
-        send({ type: 'done', message: finalMessage });
+        const finalMessage = agentManager.getConversationHistory(activeConversationId).pop();
+        const collaborations = agentManager.getCollaborationSuggestions(activeConversationId);
+        
+        send({ 
+          type: 'done', 
+          message: finalMessage,
+          conversationId: activeConversationId,
+          collaborations 
+        });
       });
     } else {
       // Regular response
       const response = await agentManager.sendMessage(
-        conversationId,
+        activeConversationId,
         message,
         agentId
       );
 
-      return NextResponse.json({ message: response });
+      const collaborations = agentManager.getCollaborationSuggestions(activeConversationId);
+
+      return NextResponse.json({ 
+        message: response,
+        conversationId: activeConversationId,
+        collaborations 
+      });
     }
   } catch (error) {
     console.error('Agent chat error:', error);
@@ -71,8 +101,51 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Create new agent conversation
+export async function PUT(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
+    const { agentId = 'nexy' } = await request.json();
+
+    const apiKey = process.env.ANTHROPIC_API_KEY || request.headers.get('x-api-key');
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'API key not configured' },
+        { status: 401 }
+      );
+    }
+
+    const claudeClient = getClaudeClient(apiKey);
+    const agentManager = getAgentManager(claudeClient);
+
+    if (userId) {
+      agentManager.setUserId(userId);
+    }
+
+    const conversationId = agentManager.createConversation(agentId);
+    const agent = getAgent(agentId);
+
+    return NextResponse.json({
+      conversationId,
+      agent,
+      greeting: agent?.greeting
+    });
+  } catch (error) {
+    console.error('Create conversation error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
     const { searchParams } = new URL(request.url);
     const conversationId = searchParams.get('conversationId');
 

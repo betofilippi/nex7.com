@@ -1,61 +1,21 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
+import createMiddleware from 'next-intl/middleware';
+import { locales, defaultLocale } from './lib/i18n/config';
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'your-secret-key-change-this-in-production'
-);
+export default createMiddleware({
+  // A list of all locales that are supported
+  locales,
 
-// Routes that require authentication
-const protectedRoutes = ['/dashboard', '/profile', '/settings'];
+  // Used when no locale matches
+  defaultLocale,
 
-// Routes that should redirect to dashboard if authenticated
-const authRoutes = ['/login', '/signup'];
+  // Automatically detect the user's locale
+  localeDetection: true,
 
-export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
-  const isAuthRoute = authRoutes.includes(path);
-
-  const token = request.cookies.get('auth-token')?.value;
-
-  // Verify token
-  let isAuthenticated = false;
-  if (token) {
-    try {
-      await jwtVerify(token, JWT_SECRET);
-      isAuthenticated = true;
-    } catch {
-      // Token is invalid or expired
-      isAuthenticated = false;
-    }
-  }
-
-  // Redirect logic
-  if (isProtectedRoute && !isAuthenticated) {
-    const response = NextResponse.redirect(new URL('/login', request.url));
-    response.cookies.delete('auth-token');
-    response.cookies.delete('refresh-token');
-    return response;
-  }
-
-  if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
-
-  return NextResponse.next();
-}
+  // Prefix strategy for locales
+  localePrefix: 'always'
+});
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public files
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)' 
-  ],
+  // Match only internationalized pathnames
+  matcher: ['/', '/(de|en|es|fr|pt|ar)/:path*']
 };

@@ -1,17 +1,29 @@
 import { hashPassword, verifyPassword } from './password';
+import { prisma } from './prisma';
+import { User as PrismaUser } from '@prisma/client';
 
 export interface User {
   id: string;
   email: string;
-  password?: string;
-  name: string;
-  picture?: string;
-  provider?: 'local' | 'google' | 'github';
+  password?: string | null;
+  name: string | null;
+  picture?: string | null;
+  provider?: 'local' | 'google' | 'github' | null;
   createdAt: Date;
 }
 
-// In-memory user store (replace with database in production)
-const users = new Map<string, User>();
+// Convert Prisma User to our User interface
+function toDomainUser(prismaUser: PrismaUser): User {
+  return {
+    id: prismaUser.id,
+    email: prismaUser.email,
+    password: prismaUser.hashedPassword,
+    name: prismaUser.name || '',
+    picture: prismaUser.image,
+    provider: prismaUser.provider as 'local' | 'google' | 'github' | null || 'local',
+    createdAt: prismaUser.createdAt,
+  };
+}
 
 export async function createUser(
   email: string,
@@ -19,33 +31,42 @@ export async function createUser(
   name: string,
   provider: 'local' | 'google' | 'github' = 'local'
 ): Promise<User> {
-  const existingUser = Array.from(users.values()).find(u => u.email === email);
+  const existingUser = await prisma.user.findUnique({
+    where: { email }
+  });
+  
   if (existingUser) {
     throw new Error('User already exists');
   }
 
-  const hashedPassword = provider === 'local' ? await hashPassword(password) : undefined;
+  const hashedPassword = provider === 'local' ? await hashPassword(password) : null;
   
-  const user: User = {
-    id: crypto.randomUUID(),
-    email,
-    password: hashedPassword,
-    name,
-    provider,
-    createdAt: new Date(),
-  };
+  const user = await prisma.user.create({
+    data: {
+      email,
+      hashedPassword,
+      name,
+      provider,
+    }
+  });
 
-  users.set(user.id, user);
-  return user;
+  return toDomainUser(user);
 }
 
 export async function findUserByEmail(email: string): Promise<User | null> {
-  const user = Array.from(users.values()).find(u => u.email === email);
-  return user || null;
+  const user = await prisma.user.findUnique({
+    where: { email }
+  });
+  
+  return user ? toDomainUser(user) : null;
 }
 
 export async function findUserById(id: string): Promise<User | null> {
-  return users.get(id) || null;
+  const user = await prisma.user.findUnique({
+    where: { id }
+  });
+  
+  return user ? toDomainUser(user) : null;
 }
 
 export async function validatePassword(user: User, password: string): Promise<boolean> {
@@ -56,12 +77,18 @@ export async function validatePassword(user: User, password: string): Promise<bo
 }
 
 export async function updateUser(id: string, updates: Partial<User>): Promise<User | null> {
-  const user = users.get(id);
-  if (!user) return null;
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      email: updates.email,
+      name: updates.name,
+      image: updates.picture,
+      provider: updates.provider,
+      hashedPassword: updates.password,
+    }
+  });
   
-  const updatedUser = { ...user, ...updates };
-  users.set(id, updatedUser);
-  return updatedUser;
+  return toDomainUser(user);
 }
 
 // OAuth user creation/update
@@ -69,19 +96,38 @@ export async function findOrCreateOAuthUser(
   email: string,
   name: string,
   provider: 'google' | 'github',
-  picture?: string
+  picture?: string,
+  providerId?: string
 ): Promise<User> {
   let user = await findUserByEmail(email);
   
   if (user) {
     // Update existing user with OAuth info
-    if (user.provider === 'local') {
+    if (user.provider === 'local' || !user.provider) {
       // User exists with local auth, link OAuth
-      user = await updateUser(user.id, { picture, provider }) || user;
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          image: picture,
+          provider,
+          providerId,
+        }
+      });
+      return toDomainUser(updatedUser);
     }
     return user;
   }
   
   // Create new OAuth user
-  return createUser(email, '', name, provider);
+  const newUser = await prisma.user.create({
+    data: {
+      email,
+      name,
+      provider,
+      providerId,
+      image: picture,
+    }
+  });
+  
+  return toDomainUser(newUser);
 }
