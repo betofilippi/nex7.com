@@ -44,7 +44,7 @@ const NodePalette: React.FC<NodePaletteProps> = ({ onDragStart }) => {
           <motion.div
             key={node.type}
             draggable
-            onDragStart={(event) => onDragStart(event, node.type)}
+            onDragStart={(event) => onDragStart(event as unknown as React.DragEvent, node.type)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className={`cursor-move bg-gradient-to-r ${node.color} text-white p-3 rounded-lg flex items-center gap-2 hover:shadow-lg transition-shadow`}
