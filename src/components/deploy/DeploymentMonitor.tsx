@@ -75,9 +75,43 @@ const DeploymentMonitor: React.FC<DeploymentMonitorProps> = ({
   const logsEndRef = useRef<HTMLDivElement>(null);
   const [logs, setLogs] = useState<BuildLog[]>([]);
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([]);
-  const [deploymentHistory, _setDeploymentHistory] = useState<DeploymentRecord[]>([]);
+  const [deploymentHistory, setDeploymentHistory] = useState<DeploymentRecord[]>([]);
   const [isLive, setIsLive] = useState(true);
   const [selectedTab, setSelectedTab] = useState('logs');
+
+  // Initialize deployment history with mock data
+  useEffect(() => {
+    const mockHistory: DeploymentRecord[] = [
+      {
+        id: '1',
+        timestamp: new Date(Date.now() - 3600000).toISOString(),
+        version: 'v1.2.3',
+        status: 'success',
+        duration: 120,
+        triggeredBy: 'GitHub Push',
+        changes: 15
+      },
+      {
+        id: '2',
+        timestamp: new Date(Date.now() - 7200000).toISOString(),
+        version: 'v1.2.2',
+        status: 'failed',
+        duration: 45,
+        triggeredBy: 'Manual Deploy',
+        changes: 8
+      },
+      {
+        id: '3',
+        timestamp: new Date(Date.now() - 10800000).toISOString(),
+        version: 'v1.2.1',
+        status: 'rollback',
+        duration: 30,
+        triggeredBy: 'Auto Rollback',
+        changes: 3
+      }
+    ];
+    setDeploymentHistory(mockHistory);
+  }, []);
 
   // Simulate real-time logs
   useEffect(() => {
