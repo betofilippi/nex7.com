@@ -155,7 +155,7 @@ export default function DeploymentHistory({
         </div>
       </CardHeader>
       <CardContent>
-        {showChart && deployments.length > 0 && (
+        {showChart && deployments.length > 0 ? (
           <div className="mb-6 p-4 rounded-lg bg-muted/50">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ export default function DeploymentHistory({
               />
             </div>
           </div>
-        )}
+        ) : null}
 
         <ScrollArea className="h-[400px] pr-4">
           {loading && !deployments.length ? (
@@ -213,7 +213,7 @@ export default function DeploymentHistory({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          {deployment.url && (
+                          {deployment.url ? (
                             <DropdownMenuItem asChild>
                               <a 
                                 href={`https://${deployment.url}`} 
@@ -225,7 +225,7 @@ export default function DeploymentHistory({
                                 Preview
                               </a>
                             </DropdownMenuItem>
-                          )}
+                          ) : null}
                           <DropdownMenuItem onClick={(e) => {
                             e.stopPropagation();
                             handleRedeploy(deployment);
@@ -252,14 +252,14 @@ export default function DeploymentHistory({
                         <div className="flex items-center gap-2 text-muted-foreground col-span-2">
                           <GitBranch className="h-3 w-3" />
                           <span>{String(deployment.meta.githubCommitRef)}</span>
-                          {deployment.meta?.githubCommitSha && (
+                          {deployment.meta?.githubCommitSha ? (
                             <>
                               <GitCommit className="h-3 w-3" />
                               <span className="font-mono">
                                 {String(deployment.meta.githubCommitSha).slice(0, 7)}
                               </span>
                             </>
-                          )}
+                          ) : null}
                         </div>
                       ) : null}
 
@@ -271,11 +271,11 @@ export default function DeploymentHistory({
                       ) : null}
                     </div>
 
-                    {deployment.state === 'ERROR' && deployment.aliasError && (
+                    {deployment.state === 'ERROR' && deployment.aliasError ? (
                       <div className="mt-2 p-2 rounded bg-destructive/10 text-xs">
                         <p className="text-destructive">{deployment.aliasError.message}</p>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 );
               })}
