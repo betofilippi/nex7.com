@@ -109,7 +109,7 @@ export class PerformanceTester {
 
   private measurePageLoadTime(): number {
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-    return navigation.loadEventEnd - navigation.navigationStart;
+    return navigation.loadEventEnd - navigation.fetchStart;
   }
 
   private async measureFCP(): Promise<number> {
