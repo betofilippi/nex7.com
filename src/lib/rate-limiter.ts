@@ -193,20 +193,7 @@ export const streamRateLimiter = new RateLimiter(rateLimiterConfigs.stream);
 export const uploadRateLimiter = new RateLimiter(rateLimiterConfigs.upload);
 export const webhookRateLimiter = new RateLimiter(rateLimiterConfigs.webhook);
 
-// Claude-specific rate limiters
-export const claudeWebhookLimiter = new RateLimiter({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  maxRequests: 100, // 100 webhook calls per hour
-  maxRequestsAuthenticated: 200, // 200 for authenticated services
-  standardHeaders: true,
-});
-
-export const claudeExecuteLimiter = new RateLimiter({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  maxRequests: 50, // 50 fix executions per hour
-  maxRequestsAuthenticated: 100, // 100 for authenticated services
-  standardHeaders: true,
-});
+// Reserved for future AI integration rate limiters
 
 // Helper function to get IP address from request
 export function getClientIdentifier(req: any): string {
