@@ -56,7 +56,7 @@ export function ClaudeExample() {
   // Send a streaming query
   const sendStreamingQuery = () => {
     if (!input.trim()) return;
-    startStream(input, conversationId);
+    startStream(input, conversationId || undefined);
   };
 
   return (
