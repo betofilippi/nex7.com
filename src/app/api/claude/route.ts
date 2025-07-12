@@ -224,8 +224,6 @@ export async function POST(request: NextRequest) {
                   outputTokens: 0
                 }
               });
-            } else if (chunk.type === 'error') {
-              throw new Error('Stream error');
             }
           }
 
