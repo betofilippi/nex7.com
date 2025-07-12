@@ -99,7 +99,7 @@ export async function findOrCreateOAuthUser(
   picture?: string,
   providerId?: string
 ): Promise<User> {
-  let user = await findUserByEmail(email);
+  const user = await findUserByEmail(email);
   
   if (user) {
     // Update existing user with OAuth info

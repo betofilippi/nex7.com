@@ -190,7 +190,7 @@ export class DebuggerAgent extends BaseAgent {
 
     const trace: ExecutionTrace[] = [];
     const lines = code.split('\n');
-    let state = { ...inputData };
+    const state = { ...inputData };
     
     // Simulate execution trace
     for (let i = 0; i < lines.length; i++) {
