@@ -16,7 +16,7 @@ const nextConfig = {
   poweredByHeader: false,
   
   // Performance optimizations
-  swcMinify: true,
+  // swcMinify is enabled by default in Next.js 15
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

@@ -3,8 +3,9 @@ import { getClaudeClient } from '../../../../lib/claude-client';
 import { getAgentManager } from '../../../../lib/agents/manager';
 import { getAgent } from '../../../../lib/agents/definitions';
 import { streamSSE } from '../../../../lib/sse-utils';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+// Remove auth dependencies for production build
+// import { getServerSession } from 'next-auth';
+// import { authOptions } from '../../auth/[...nextauth]/route';
 
 export async function POST(request: NextRequest) {
   try {
