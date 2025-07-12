@@ -88,7 +88,7 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
           borderColor: agent.color,
           borderWidth: '2px',
           borderStyle: 'solid',
-          ringColor: agent.color + '40'
+          borderColor: agent.color + '40'
         }}
         animate={moodAnimations[currentMood] || {}}
         whileHover={onClick ? { scale: 1.1 } : {}}
