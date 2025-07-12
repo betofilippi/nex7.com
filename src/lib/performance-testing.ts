@@ -321,13 +321,14 @@ export class BundleAnalyzer {
 // Utility functions
 export const measureFunctionPerformance = <T extends any[], R>(
   fn: (...args: T) => R,
+  args: T,
   iterations: number = 1000
 ): { averageTime: number; totalTime: number; iterations: number } => {
   const times: number[] = [];
   
   for (let i = 0; i < iterations; i++) {
     const start = performance.now();
-    fn([] as any as T);
+    fn(...args);
     const end = performance.now();
     times.push(end - start);
   }
