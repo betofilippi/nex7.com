@@ -14,7 +14,7 @@ const createWebhookSchema = z.object({
   url: validators.url,
   events: z.array(z.nativeEnum(WebhookEventType)).min(1),
   secret: z.string().min(16).optional(),
-  headers: z.record(z.string()).optional(),
+  headers: z.record(z.string(), z.string()).optional(),
   active: z.boolean().default(true),
 });
 
