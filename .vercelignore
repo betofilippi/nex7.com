@@ -1,23 +1,47 @@
+# Dependencies
 node_modules
+
+# Environment files
 .env*
+!.env.example
+
+# IDE and OS files
 .DS_Store
 *.log
+.vscode
+.idea
+
+# Git
 .git
+.github
+
+# Documentation
+docs/
 README.md
+*.md
+
+# Test files
+**/*.test.*
+**/*.spec.*
+__tests__/
+e2e/
+coverage/
+
+# Build artifacts
+.next/cache
+dist/
+build/
+out/
+
+# Config files
+jest.config.*
+playwright.config.*
 .eslintrc*
 .prettierrc*
-docs/
-e2e/
-__tests__/
-*.test.ts
-*.test.tsx
-*.spec.ts
-playwright.config.ts
-jest.config.js
-jest.setup.js
-.github/
-prisma/seed.ts
+tsconfig.json
+tailwind.config.*
+
+# Scripts
 scripts/
 sdk/
-tsconfig.tsbuildinfo
-.next/cache
+prisma/seed.ts

@@ -1,0 +1,55 @@
+{
+  "project": {
+    "name": "NEX7",
+    "version": "1.0.0",
+    "description": "Sistema completo de automação de deploy"
+  },
+  "deployment": {
+    "platform": "vercel",
+    "retryAttempts": 3,
+    "timeout": 300,
+    "buildTimeout": 600,
+    "regions": ["iad1"],
+    "environment": "production"
+  },
+  "automation": {
+    "watchFiles": ["src/**/*", "app/**/*", "components/**/*", "lib/**/*"],
+    "ignorePatterns": [
+      "**/*.test.*",
+      "**/*.spec.*", 
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/.next/**"
+    ],
+    "debounceDelay": 30000,
+    "enableNotifications": true
+  },
+  "validation": {
+    "typeCheck": true,
+    "lint": true,
+    "build": true,
+    "tests": false
+  },
+  "hooks": {
+    "prePush": ["type-check", "lint"],
+    "postMerge": ["deploy:auto"],
+    "preCommit": ["lint:fix"]
+  },
+  "notifications": {
+    "desktop": true,
+    "webhooks": {
+      "enabled": true,
+      "endpoints": []
+    },
+    "github": {
+      "prComments": true,
+      "statusChecks": true
+    }
+  },
+  "logging": {
+    "level": "info",
+    "directory": "/tmp",
+    "maxFiles": 10,
+    "format": "claude-deploy-{timestamp}.log"
+  }
+}

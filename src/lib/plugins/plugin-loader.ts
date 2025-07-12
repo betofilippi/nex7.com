@@ -213,10 +213,10 @@ export class PluginLoader {
     const storage = new PluginStorage(plugin.manifest.id);
     
     const events = {
-      on: (event: string, handler: Function) => this.eventEmitter.on(`${plugin.manifest.id}:${event}`, handler),
-      off: (event: string, handler: Function) => this.eventEmitter.off(`${plugin.manifest.id}:${event}`, handler),
+      on: (event: string, handler: (...args: any[]) => void) => this.eventEmitter.on(`${plugin.manifest.id}:${event}`, handler),
+      off: (event: string, handler: (...args: any[]) => void) => this.eventEmitter.off(`${plugin.manifest.id}:${event}`, handler),
       emit: (event: string, data?: any) => this.eventEmitter.emit(`${plugin.manifest.id}:${event}`, data),
-      once: (event: string, handler: Function) => this.eventEmitter.once(`${plugin.manifest.id}:${event}`, handler),
+      once: (event: string, handler: (...args: any[]) => void) => this.eventEmitter.once(`${plugin.manifest.id}:${event}`, handler),
     };
 
     const logger = {
@@ -257,11 +257,11 @@ export class PluginLoader {
     keys.forEach(key => localStorage.removeItem(key));
   }
 
-  on(event: string, handler: Function): void {
+  on(event: string, handler: (...args: any[]) => void): void {
     this.eventEmitter.on(event, handler);
   }
 
-  off(event: string, handler: Function): void {
+  off(event: string, handler: (...args: any[]) => void): void {
     this.eventEmitter.off(event, handler);
   }
 }
