@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       userInfo.name,
       'google',
       userInfo.picture,
-      userInfo.id
+      undefined // Google OAuth userInfo doesn't include ID
     );
 
     // Generate JWT tokens

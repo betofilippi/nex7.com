@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       userInfo.name,
       'github',
       userInfo.picture,
-      userInfo.id?.toString()
+      undefined // GitHub OAuth doesn't provide ID in userInfo
     );
 
     // Generate JWT tokens
