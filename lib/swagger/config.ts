@@ -1,6 +1,4 @@
-import { OpenAPIV3 } from 'openapi-types';
-
-export const swaggerConfig: OpenAPIV3.Document = {
+export const swaggerConfig = {
   openapi: '3.0.0',
   info: {
     title: 'NEX7 API Documentation',
