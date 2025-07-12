@@ -1,6 +1,6 @@
 # NEX7 - Plataforma Visual Claude Code
 
-Uma plataforma completa para desenvolvimento assistido por IA, integrando Claude Code com uma interface visual intuitiva.
+Uma plataforma completa para desenvolvimento assistido por IA, integrando Claude Code com uma interface visual intuitiva e sistema automático de monitoramento de deploy.
 
 ## 🚀 Características Principais
 
@@ -17,10 +17,11 @@ Uma plataforma completa para desenvolvimento assistido por IA, integrando Claude
 - Conexões animadas com fluxo de partículas
 - Editor inline e context menus
 
-### 🔄 CI/CD Visual
-- Monitoramento em tempo real de deployments
-- Auto-recovery com Claude AI
-- Integração completa com GitHub Actions
+### 🔄 CI/CD Visual com Auto-Recovery
+- **Monitoramento automático** de deployments Vercel
+- **Auto-correção** de erros TypeScript, ESLint e dependências
+- **Issues automáticas** no GitHub para problemas complexos
+- **Commits automáticos** das correções aplicadas
 - Pipeline 3D visual com animações
 
 ### 🎓 Onboarding para Iniciantes
@@ -44,12 +45,38 @@ Uma plataforma completa para desenvolvimento assistido por IA, integrando Claude
 - **Auth**: JWT, OAuth 2.0
 - **Deploy**: Vercel API
 - **Charts**: Chart.js, React Chart.js 2
+- **CI/CD**: GitHub Actions
+
+## 🤖 Sistema de Auto-Deploy
+
+### Funcionalidades do Monitoramento Automático:
+- ✅ **Monitoramento em tempo real** após cada push
+- ✅ **Detecção automática** de falhas via API Vercel
+- ✅ **Correções automáticas** para erros comuns
+- ✅ **Issues no GitHub** quando não consegue corrigir
+- ✅ **Commits automáticos** das correções aplicadas
+
+### Correções Automáticas Suportadas:
+- **TypeScript errors** → Adiciona @ts-ignore
+- **ESLint errors** → Executa eslint --fix
+- **Import path issues** → Converte para paths relativos
+- **Missing dependencies** → Executa npm install
+- **Unescaped entities** → Corrige HTML entities
+- **Next.js warnings** → Converte para componentes adequados
+
+### Configuração dos Secrets:
+```bash
+# GitHub Repository Secrets necessários:
+VERCEL_TOKEN=your_vercel_token_here
+VERCEL_PROJECT_ID=your_project_id_here
+VERCEL_TEAM_ID=your_team_id_here_optional
+```
 
 ## 📦 Instalação
 
 1. **Clone o repositório**:
 ```bash
-git clone <repo-url>
+git clone https://github.com/betofilippi/nex7.com.git
 cd nex7.com
 ```
 
@@ -64,12 +91,17 @@ cp .env.local.example .env.local
 # Edite .env.local com suas chaves
 ```
 
-4. **Inicie o servidor de desenvolvimento**:
+4. **Configure os secrets do GitHub** (para auto-deploy):
+```bash
+node scripts/setup-vercel-secrets.js
+```
+
+5. **Inicie o servidor de desenvolvimento**:
 ```bash
 npm run dev
 ```
 
-5. **Acesse a aplicação**:
+6. **Acesse a aplicação**:
 ```
 http://localhost:3000
 ```
@@ -90,9 +122,10 @@ http://localhost:3000
    - Settings: https://github.com/settings/developers
    - Adicione: `GITHUB_CLIENT_ID` e `GITHUB_CLIENT_SECRET`
 
-4. **Vercel** (opcional):
+4. **Vercel** (para auto-deploy):
    - Dashboard: https://vercel.com/dashboard
-   - Adicione: `VERCEL_CLIENT_ID` e `VERCEL_CLIENT_SECRET`
+   - Tokens: https://vercel.com/account/tokens
+   - Adicione: `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, `VERCEL_TEAM_ID`
 
 ### Configuração de JWT
 Gere chaves seguras para JWT:
@@ -119,7 +152,9 @@ src/
 │   ├── auth/              # Autenticação
 │   ├── claude/            # Claude Code SDK
 │   └── vercel/            # Vercel API
-└── types/                 # TypeScript definitions
+├── types/                 # TypeScript definitions
+├── .github/workflows/     # GitHub Actions
+└── scripts/               # Scripts de automação
 ```
 
 ## 🎯 Como Usar
@@ -148,25 +183,28 @@ src/
 - Auto-recovery em caso de erros
 - Histórico completo de deployments
 
-## 🚀 Funcionalidades Avançadas
+## 🤖 Auto-Deploy em Ação
 
-### Auto-Recovery
-- Detecção automática de erros
-- Análise com Claude AI
-- Sugestões inteligentes de correção
-- Re-deploy automático
+### Workflow Automático:
+1. **Push para main/develop** → Trigger GitHub Actions
+2. **Aguarda 30s** → Espera deployment Vercel iniciar
+3. **Monitora a cada 30s** → Verifica status (máx 20min)
+4. **Se falhar**:
+   - Analisa logs de erro
+   - Aplica correções automáticas
+   - Faz commit das correções
+   - Triggera novo deployment
+   - Cria issue se não conseguir corrigir
+5. **Se suceder**:
+   - Fecha issues relacionadas
+   - Reporta sucesso
 
-### Webhooks GitHub
-- Integração completa com GitHub Actions
-- Triggers automáticos de deploy
-- Monitoramento de PRs
-- Notificações em tempo real
-
-### Colaboração
-- Múltiplos workspaces
-- Compartilhamento de projetos
-- Histórico de alterações
-- Permissões granulares
+### Arquivos do Sistema:
+- `.github/workflows/auto-deploy-monitor.yml` - Workflow principal
+- `.github/workflows/deploy-status.yml` - Status do deployment
+- `scripts/auto-fix-errors.sh` - Script de correção automática
+- `scripts/monitor-vercel-deployment.js` - Monitor de deployment
+- `scripts/setup-vercel-secrets.js` - Guia de configuração
 
 ## 🔐 Segurança
 
@@ -176,6 +214,7 @@ src/
 - Validação de webhooks
 - Cookies httpOnly
 - CORS configurado
+- Secrets criptografados no GitHub
 
 ## 📈 Monitoramento
 
@@ -184,24 +223,44 @@ src/
 - Analytics de uso de IA
 - Alertas proativos
 - Dashboard de saúde
+- Issues automáticas para falhas
 
 ## 🛠 Desenvolvimento
 
 ### Scripts Disponíveis
 ```bash
-npm run dev       # Servidor de desenvolvimento
-npm run build     # Build para produção
-npm run start     # Servidor de produção
-npm run lint      # ESLint
-npm run type-check # TypeScript check
+npm run dev         # Servidor de desenvolvimento
+npm run build       # Build para produção
+npm run start       # Servidor de produção
+npm run lint        # ESLint
+npm run lint:fix    # ESLint com correção automática
+npm run type-check  # Verificação TypeScript
 ```
 
-### Contribuindo
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
+### Testando o Auto-Deploy
+```bash
+# Faça qualquer mudança e push
+git add .
+git commit -m "Test auto-deploy system"
+git push
+
+# Acompanhe no GitHub Actions
+# Verá o monitoramento automático em ação
+```
+
+## 🚀 Deploy
+
+### Vercel (Recomendado)
+1. Conecte seu repositório GitHub à Vercel
+2. Configure as variáveis de ambiente
+3. Configure os secrets do GitHub para auto-monitoramento
+4. Deploy automático a cada push
+
+### Manual
+```bash
+npm run build
+npm run start
+```
 
 ## 📄 Licença
 
@@ -211,9 +270,19 @@ MIT License - veja [LICENSE](LICENSE) para detalhes.
 
 - **Documentação**: `/docs`
 - **Demo**: `/demo`
-- **Issues**: GitHub Issues
+- **Issues**: GitHub Issues (automáticas!)
 - **Discussões**: GitHub Discussions
+
+## 🎉 Recursos Únicos
+
+### O que torna o NEX7 especial:
+- **🤖 Auto-Recovery**: Primeiro sistema que corrige erros de deploy automaticamente
+- **👥 Multi-Agentes**: 5 agentes especializados trabalhando juntos
+- **🎨 Canvas Visual**: Interface drag-and-drop para workflows de desenvolvimento
+- **🎓 Para Iniciantes**: Onboarding que torna programação acessível
+- **🔄 CI/CD Inteligente**: Monitoramento com correção automática
+- **⚡ Zero Config**: Deploy e monitoramento funcionam out-of-the-box
 
 ---
 
-Feito com ❤️ usando Claude Code e Next.js
+Feito com ❤️ usando Claude Code, Next.js e muita automação inteligente! 🚀
