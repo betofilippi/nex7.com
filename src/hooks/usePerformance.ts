@@ -97,7 +97,7 @@ export function usePerformance() {
       if (navigationEntry) {
         setMetrics(prev => ({
           ...prev,
-          fcp: navigationEntry.loadEventStart - navigationEntry.navigationStart,
+          fcp: navigationEntry.loadEventStart - navigationEntry.fetchStart,
           ttfb: navigationEntry.responseStart - navigationEntry.requestStart
         }));
       }
