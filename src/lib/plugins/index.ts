@@ -2,7 +2,7 @@ export * from './types';
 export * from './plugin-loader';
 export * from './plugin-registry';
 export * from './plugin-sandbox';
-export * from './plugin-api';
+export { PluginAPI as PluginAPIClass } from './plugin-api';
 export * from './plugin-storage';
 export * from './plugin-marketplace';
 
