@@ -381,46 +381,47 @@ export function useEnhancedAgents(options: UseEnhancedAgentsOptions = {}) {
     }
   };
 
-  // Get or set agent memory
-  const agentMemory = useCallback({
-    get: async (agentId: string, key?: string, search?: string) => {
-      const params = new URLSearchParams({ agentId });
-      if (key) params.append('key', key);
-      if (search) params.append('search', search);
+  // Get agent memory
+  const getAgentMemory = useCallback(async (agentId: string, key?: string, search?: string) => {
+    const params = new URLSearchParams({ agentId });
+    if (key) params.append('key', key);
+    if (search) params.append('search', search);
 
-      const response = await fetch(`/api/agents/memory?${params}`);
-      const data = await response.json();
-      return data.memories;
-    },
+    const response = await fetch(`/api/agents/memory?${params}`);
+    const data = await response.json();
+    return data.memories;
+  }, []);
 
-    set: async (agentId: string, key: string, value: any, expiresIn?: number) => {
-      const response = await fetch('/api/agents/memory', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId, key, value, expiresIn })
-      });
-      const data = await response.json();
-      return data.memory;
-    },
+  // Set agent memory
+  const setAgentMemory = useCallback(async (agentId: string, key: string, value: any, expiresIn?: number) => {
+    const response = await fetch('/api/agents/memory', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agentId, key, value, expiresIn })
+    });
+    const data = await response.json();
+    return data.memory;
+  }, []);
 
-    clear: async (agentId: string) => {
-      const response = await fetch(`/api/agents/memory?agentId=${agentId}`, {
-        method: 'DELETE'
-      });
-      const data = await response.json();
-      return data.cleared;
-    },
+  // Clear agent memory
+  const clearAgentMemory = useCallback(async (agentId: string) => {
+    const response = await fetch(`/api/agents/memory?agentId=${agentId}`, {
+      method: 'DELETE'
+    });
+    const data = await response.json();
+    return data.cleared;
+  }, []);
 
-    getStats: async () => {
-      const response = await fetch('/api/agents/memory', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'analytics' })
-      });
-      const data = await response.json();
-      setMemoryStats(data);
-      return data;
-    }
+  // Get memory stats
+  const getMemoryStats = useCallback(async () => {
+    const response = await fetch('/api/agents/memory', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'analytics' })
+    });
+    const data = await response.json();
+    setMemoryStats(data);
+    return data;
   }, []);
 
   // Clear the current conversation
@@ -459,7 +460,12 @@ export function useEnhancedAgents(options: UseEnhancedAgentsOptions = {}) {
     cancel,
 
     // Memory operations
-    memory: agentMemory,
+    memory: {
+      get: getAgentMemory,
+      set: setAgentMemory,
+      clear: clearAgentMemory,
+      getStats: getMemoryStats
+    },
 
     // Utilities
     getActiveTools: () => agentTools[activeAgentId] || [],
