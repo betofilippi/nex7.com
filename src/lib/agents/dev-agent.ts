@@ -8,7 +8,7 @@ import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const execAsync = promisify(exec);
+// const execAsync = promisify(exec);
 
 // Dev's specialized tools
 const DEV_TOOLS: ClaudeTool[] = [
