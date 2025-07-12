@@ -17,6 +17,8 @@
     "analyze:full": "npm run analyze:multi && npm run analyze",
     "pre-deploy": "bash scripts/pre-deploy-check.sh",
     "vercel:build": "npm run pre-deploy && npm run build",
+    "test:build": "bash scripts/test-vercel-build.sh",
+    "pre-push": "npm run type-check && npm run lint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
