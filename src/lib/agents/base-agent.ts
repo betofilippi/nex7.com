@@ -1,6 +1,6 @@
 import { ClaudeClient, ClaudeMessage, ClaudeTool } from '../claude-client';
 import { Agent } from './definitions';
-import { AgentMemory, getAgentMemory, setAgentMemory } from '../agent-memory';
+import { AgentMemory, getAgentMemory, setAgentMemory, searchAgentMemory } from '../agent-memory';
 import Anthropic from '@anthropic-ai/sdk';
 
 export abstract class BaseAgent {
