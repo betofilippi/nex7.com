@@ -97,11 +97,6 @@ export class QueryBuilder {
 // Optimized database operations
 export class OptimizedDatabase {
   // Cached user operations
-  @withCache(
-    dbCache,
-    (id: string) => generateCacheKey('user', id),
-    1000 * 60 * 30 // 30 minutes
-  )
   static async findUserById(id: string) {
     return await prisma.user.findUnique({
       where: { id },
@@ -116,11 +111,6 @@ export class OptimizedDatabase {
     });
   }
 
-  @withCache(
-    dbCache,
-    (email: string) => generateCacheKey('user:email', email),
-    1000 * 60 * 15 // 15 minutes
-  )
   static async findUserByEmail(email: string) {
     return await prisma.user.findUnique({
       where: { email },
