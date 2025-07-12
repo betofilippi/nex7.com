@@ -186,11 +186,11 @@ export class DebuggerAgent extends BaseAgent {
     input?: any;
     breakpoints?: number[];
   }): Promise<any> {
-    const { code, input = {}, breakpoints = [] } = input;
+    const { code, input: inputData = {}, breakpoints = [] } = input;
 
     const trace: ExecutionTrace[] = [];
     const lines = code.split('\n');
-    let state = { ...input };
+    let state = { ...inputData };
     
     // Simulate execution trace
     for (let i = 0; i < lines.length; i++) {
