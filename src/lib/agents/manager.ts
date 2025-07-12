@@ -167,7 +167,7 @@ export class AgentManager {
     conversation.updatedAt = new Date();
 
     // Check for collaboration opportunities
-    if (metadata.suggestedNextAgent && metadata.suggestedNextAgent !== agent.id) {
+    if (metadata?.suggestedNextAgent && metadata?.suggestedNextAgent !== agent.id) {
       this.queueCollaboration({
         fromAgent: agent.id,
         toAgent: metadata.suggestedNextAgent,
