@@ -117,7 +117,6 @@ export class OptimizedDatabase {
         id: true,
         email: true,
         name: true,
-        password: true,
       },
     });
   }
