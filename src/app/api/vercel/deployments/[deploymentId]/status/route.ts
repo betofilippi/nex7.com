@@ -3,8 +3,9 @@ import { getVercelClient } from '../../../../../../lib/vercel/client';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { deploymentId: string } }
+  context: { params: Promise<{ deploymentId: string }> }
 ) {
+  const params = await context.params;
   const client = await getVercelClient();
   if (!client) {
     return NextResponse.json(
@@ -13,7 +14,7 @@ export async function GET(
     );
   }
 
-  const deploymentId = params.deploymentId;
+  const { deploymentId } = params;
   const encoder = new TextEncoder();
 
   const customReadable = new ReadableStream({
