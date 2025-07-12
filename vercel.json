@@ -4,7 +4,7 @@
       "NODE_OPTIONS": "--max-old-space-size=4096"
     }
   },
-  "installCommand": "npm install --legacy-peer-deps --force",
+  "installCommand": "npm ci --legacy-peer-deps",
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "outputDirectory": ".next",
