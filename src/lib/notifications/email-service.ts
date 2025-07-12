@@ -192,7 +192,7 @@ export class EmailService {
     this.templates.set(template.id, template);
   }
 
-  getTemplate(id: string): EmailTemplate | undefined {
+  getTemplateById(id: string): EmailTemplate | undefined {
     return this.templates.get(id);
   }
 
