@@ -327,7 +327,7 @@ export const measureFunctionPerformance = <T extends any[], R>(
   
   for (let i = 0; i < iterations; i++) {
     const start = performance.now();
-    fn();
+    fn([] as any as T);
     const end = performance.now();
     times.push(end - start);
   }
