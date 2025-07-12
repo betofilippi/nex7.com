@@ -3,10 +3,11 @@ import { Agent } from './definitions';
 import { BaseAgent } from './base-agent';
 import { setAgentMemory } from '../agent-memory';
 import * as ts from 'typescript';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import { promises as fs } from 'fs';
-import path from 'path';
+// Remove Node.js specific imports for browser compatibility
+// import { exec } from 'child_process';
+// import { promisify } from 'util';
+// import { promises as fs } from 'fs';
+// import path from 'path';
 
 // const execAsync = promisify(exec);
 
