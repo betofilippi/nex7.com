@@ -234,7 +234,7 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
                           <Input
                             type="email"
                             placeholder="Enter email address"
-                            value={channel.config.email || ''}
+                            value={(channel.config?.email as string) || ''}
                             onChange={(e) => updateChannelConfig(channel.id, { email: e.target.value })}
                             className="bg-gray-800 border-gray-700"
                           />
@@ -243,7 +243,7 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
                           <Input
                             type="tel"
                             placeholder="Enter phone number"
-                            value={channel.config.phone || ''}
+                            value={(channel.config?.phone as string) || ''}
                             onChange={(e) => updateChannelConfig(channel.id, { phone: e.target.value })}
                             className="bg-gray-800 border-gray-700"
                           />
@@ -252,7 +252,7 @@ const DeploymentNotifications: React.FC<DeploymentNotificationsProps> = ({
                           <Input
                             type="url"
                             placeholder="Enter Slack webhook URL"
-                            value={channel.config.webhook || ''}
+                            value={(channel.config?.webhook as string) || ''}
                             onChange={(e) => updateChannelConfig(channel.id, { webhook: e.target.value })}
                             className="bg-gray-800 border-gray-700"
                           />
