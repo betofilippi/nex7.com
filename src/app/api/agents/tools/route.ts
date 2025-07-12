@@ -9,7 +9,7 @@ import { getAgentManager } from '../../../../lib/agents/manager';
 export async function POST(request: NextRequest) {
   try {
     // const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
+    const userId = 'anonymous'; // Fallback for production
 
     const { 
       agentId, 
