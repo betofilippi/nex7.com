@@ -123,7 +123,7 @@ const mockTours: TutorialTour[] = [
 
 interface TutorialProviderProps {
   children: ReactNode;
-  onEvent?: (event: string, data?: any) => void;
+  onEvent?: (event: string, data?: Record<string, unknown>) => void;
 }
 
 export const TutorialProvider: React.FC<TutorialProviderProps> = ({ 

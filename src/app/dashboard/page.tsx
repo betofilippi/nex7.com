@@ -270,7 +270,7 @@ export default function DashboardPage() {
                   </div>
                 </CardHeader>
                 <div className="h-[600px] relative">
-                  <Canvas height="h-full" className="rounded-b-lg" />
+                  <Canvas />
                 </div>
               </Card>
             </TabsContent>
