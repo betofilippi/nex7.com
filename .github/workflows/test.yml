@@ -71,7 +71,7 @@ jobs:
           name: codecov-umbrella
           
       - name: Upload coverage to artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage/
@@ -149,7 +149,7 @@ jobs:
         run: npm run e2e
         
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
@@ -186,7 +186,7 @@ jobs:
         run: npm run test:visual
         
       - name: Upload visual diff reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: visual-diff-report
@@ -222,7 +222,7 @@ jobs:
         run: npm run test:performance
         
       - name: Upload performance reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: performance-report
           path: test-results/
@@ -260,7 +260,7 @@ jobs:
     
     steps:
       - name: Download coverage reports
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: coverage-report
           path: coverage/
