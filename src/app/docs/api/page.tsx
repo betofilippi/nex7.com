@@ -7,15 +7,34 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Download, RefreshCw } from 'lucide-react';
 
+// Type for SwaggerUI props
+interface SwaggerUIProps {
+  spec: any;
+  deepLinking?: boolean;
+  displayOperationId?: boolean;
+  defaultModelsExpandDepth?: number;
+  defaultModelExpandDepth?: number;
+  showExtensions?: boolean;
+  showCommonExtensions?: boolean;
+  tryItOutEnabled?: boolean;
+  supportedSubmitMethods?: string[];
+  onComplete?: (system: any) => void;
+  requestInterceptor?: (request: any) => any;
+  responseInterceptor?: (response: any) => any;
+}
+
 // Dynamically import SwaggerUI to avoid SSR issues
-const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-    </div>
-  ),
-});
+const SwaggerUI = dynamic<SwaggerUIProps>(
+  () => import('swagger-ui-react') as any,
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    ),
+  }
+);
 
 // Import Swagger UI styles
 import 'swagger-ui-react/swagger-ui.css';
