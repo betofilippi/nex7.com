@@ -96,7 +96,7 @@ export async function bashTool(input: { command: string; timeout?: number }): Pr
     };
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    const execError = error as any; // Type assertion for exec error properties
+    const execError = error as { stdout?: string; stderr?: string; code?: number };
     
     return { 
       success: false, 
@@ -163,11 +163,14 @@ export async function grepTool(input: {
       data: stdout.trim().split('\n').filter(line => line),
     };
   } catch (error: unknown) {
+    const execError = error as { code?: number };
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    
     // Grep returns exit code 1 when no matches found
-    if (error.code === 1) {
+    if (execError.code === 1) {
       return { success: true, data: [] };
     }
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
