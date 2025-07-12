@@ -189,7 +189,7 @@ export class PerformanceTester {
   private measureTTI(): number {
     // Simplified TTI calculation
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-    return navigation.domContentLoadedEventEnd - navigation.navigationStart + 1000; // Add 1s buffer
+    return navigation.domContentLoadedEventEnd - navigation.fetchStart + 1000; // Add 1s buffer
   }
 
   generateReport(): string {
