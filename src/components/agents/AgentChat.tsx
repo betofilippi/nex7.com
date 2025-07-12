@@ -184,7 +184,7 @@ export const AgentChat: React.FC<AgentChatProps> = ({
         <AnimatePresence mode="popLayout">
           {messages.map((message, index) => (
             <MessageBubble
-              key={`${message.agentId}-${index}`}
+              key={`${conversationId}-${message.agentId}-${index}`}
               message={message}
               agent={message.agentId !== 'user' ? agentsMap[message.agentId] : undefined}
               isUser={message.role === 'user'}

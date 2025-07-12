@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -52,7 +52,7 @@ export default function BuildLogsViewer({
   const scrollRef = useRef<HTMLDivElement>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
 
-  const startStreaming = () => {
+  const startStreaming = useCallback(() => {
     if (eventSourceRef.current) return;
 
     setStreaming(true);
@@ -77,7 +77,7 @@ export default function BuildLogsViewer({
     });
 
     eventSourceRef.current = eventSource;
-  };
+  }, [deploymentId, paused]);
 
   const stopStreaming = () => {
     if (eventSourceRef.current) {
@@ -87,7 +87,7 @@ export default function BuildLogsViewer({
     }
   };
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/vercel/logs?deploymentId=${deploymentId}`);
@@ -100,7 +100,7 @@ export default function BuildLogsViewer({
     } finally {
       setLoading(false);
     }
-  };
+  }, [deploymentId]);
 
   useEffect(() => {
     if (deploymentId) {

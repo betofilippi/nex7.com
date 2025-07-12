@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -61,7 +61,7 @@ export default function DeploymentHistory({
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchDeployments = async (isRefresh = false) => {
+  const fetchDeployments = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
 
@@ -80,7 +80,7 @@ export default function DeploymentHistory({
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [projectId, limit]);
 
   useEffect(() => {
     fetchDeployments();

@@ -52,8 +52,17 @@ export async function POST(request: NextRequest) {
       enableTools ? CLAUDE_TOOLS : undefined
     );
 
+    // Define tool call type
+    type ToolCall = {
+      id: string;
+      name: string;
+      input: unknown;
+      result?: unknown;
+      error?: string;
+    };
+
     // Handle tool calls if any
-    const toolCalls: unknown[] = [];
+    const toolCalls: ToolCall[] = [];
     let finalContent = '';
 
     for (const content of response.content) {
@@ -102,7 +111,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Create tool results message
-      const toolResultsMessage = toolCalls.map((tc: any) => ({
+      const toolResultsMessage = toolCalls.map((tc) => ({
         type: 'tool_result',
         tool_use_id: tc.id,
         content: tc.error ? `Error: ${tc.error}` : JSON.stringify(tc.result),

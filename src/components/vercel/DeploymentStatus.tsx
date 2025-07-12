@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Progress } from '../ui/progress';
@@ -83,7 +83,7 @@ export default function DeploymentStatus({
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
-  const fetchDeployment = async () => {
+  const fetchDeployment = useCallback(async () => {
     if (!deploymentId) return;
 
     try {
@@ -108,7 +108,7 @@ export default function DeploymentStatus({
     } finally {
       setLoading(false);
     }
-  };
+  }, [deploymentId]);
 
   useEffect(() => {
     fetchDeployment();

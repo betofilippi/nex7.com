@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import {
@@ -68,7 +68,7 @@ export default function QuickDeploy({
     }
   }, [showProjectSelector, fetchProjects]);
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
       const response = await fetch('/api/vercel/projects');
       if (response.ok) {
@@ -81,7 +81,7 @@ export default function QuickDeploy({
     } catch (error) {
       console.error('Error fetching projects:', error);
     }
-  };
+  }, [selectedProject]);
 
   const handleQuickDeploy = async () => {
     if (!selectedProject && !defaultProjectId) return;
