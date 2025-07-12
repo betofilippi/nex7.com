@@ -85,7 +85,6 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
         `}
         style={{
           backgroundColor: agent.color + '20',
-          borderColor: agent.color,
           borderWidth: '2px',
           borderStyle: 'solid',
           borderColor: agent.color + '40'
