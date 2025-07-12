@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Canvas } from '../../components/canvas';
-import { AgentChat } from '../../components/agents/AgentChat';
 import { AgentSelector } from '../../components/agents/AgentSelector';
 import { DeploymentHistory } from '../../components/vercel/DeploymentHistory';
 import { DeploymentStatus } from '../../components/vercel/DeploymentStatus';
@@ -304,13 +303,13 @@ export default function DashboardPage() {
                       Chat with AI Assistant
                     </CardTitle>
                   </CardHeader>
-                  <div className="h-[500px]">
-                    <AgentChat
-                      apiKey={process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY || ''}
-                      conversationId="dashboard-chat"
-                      activeAgentId={activeAgent}
-                      className="h-full"
-                    />
+                  <div className="h-[500px] flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-gray-600 mb-4">AI Agent Chat Interface</p>
+                      <p className="text-sm text-gray-500">
+                        Chat functionality will be available when API keys are configured.
+                      </p>
+                    </div>
                   </div>
                 </Card>
               </div>
