@@ -23,7 +23,6 @@
     "deploy:setup": "./deploy.sh --setup",
     "deploy:validate": "./deploy.sh --validate-only",
     "deploy:github": "./deploy.sh --github-actions",
-    "postinstall": "./deploy.sh --setup",
     "pre-push": "npm run type-check && npm run lint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
