@@ -6,8 +6,9 @@ const apiKeyManager = new APIKeyManager();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
+  const params = await context.params;
   // Authenticate request
   const auth = await authenticateAPIRequest(request, apiKeyManager);
   if (!auth.success) {
@@ -57,8 +58,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
+  const params = await context.params;
   // Authenticate request
   const auth = await authenticateAPIRequest(request, apiKeyManager);
   if (!auth.success) {
@@ -111,8 +113,9 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
+  const params = await context.params;
   // Authenticate request
   const auth = await authenticateAPIRequest(request, apiKeyManager);
   if (!auth.success) {
