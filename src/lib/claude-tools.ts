@@ -65,7 +65,7 @@ export async function editTool(input: {
     let content = await fs.readFile(file_path, 'utf-8');
     
     if (replace_all) {
-      content = content.replaceAll(old_string, new_string);
+      content = content.split(old_string).join(new_string);
     } else {
       const index = content.indexOf(old_string);
       if (index === -1) {
