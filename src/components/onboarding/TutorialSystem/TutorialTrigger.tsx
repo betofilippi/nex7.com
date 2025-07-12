@@ -30,7 +30,7 @@ export const TutorialTrigger: React.FC<TutorialTriggerProps> = ({
   position = 'bottom-right',
   className = ''
 }) => {
-  const { startTour, progress, isCompleted } = useTutorial();
+  const { startTour, isCompleted } = useTutorial();
   const [showMenu, setShowMenu] = useState(false);
 
   const tutorials = [
@@ -221,7 +221,7 @@ export const TutorialTrigger: React.FC<TutorialTriggerProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                       >
                         <h3 className="font-semibold mb-2">🎉 Congratulations!</h3>
-                        <p className="text-sm">You've completed all tutorials. You're now a NEX7 expert!</p>
+                        <p className="text-sm">You&apos;ve completed all tutorials. You&apos;re now a NEX7 expert!</p>
                       </motion.div>
                     )}
                   </CardContent>

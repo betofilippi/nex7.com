@@ -262,3 +262,5 @@ export default function DeploymentStatus({
     </Card>
   );
 }
+
+export { DeploymentStatus };

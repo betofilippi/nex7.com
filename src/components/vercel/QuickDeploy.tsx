@@ -269,3 +269,5 @@ export default function QuickDeploy({
     </Button>
   );
 }
+
+export { QuickDeploy };

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import { useAuth } from '../../contexts/AuthContext';
@@ -26,7 +26,6 @@ import {
   FolderOpen,
   Zap,
   Activity,
-  TrendingUp,
   Clock,
   Users,
   Palette
@@ -37,7 +36,7 @@ export default function DashboardPage() {
   const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [activeAgent, setActiveAgent] = useState('nexy');
-  const [dashboardStats, setDashboardStats] = useState({
+  const [dashboardStats] = useState({
     totalProjects: 12,
     activeDeployments: 3,
     totalMessages: 247,
