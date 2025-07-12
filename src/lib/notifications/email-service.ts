@@ -1,4 +1,4 @@
-import { Notification, EmailTemplate } from './types';
+import type { Notification, EmailTemplate } from './types';
 
 export class EmailService {
   private templates: Map<string, EmailTemplate> = new Map();

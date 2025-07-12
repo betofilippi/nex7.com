@@ -77,7 +77,7 @@ export interface DeploymentBuildLogs {
   logs: VercelBuildLog[];
 }
 
-class VercelClient {
+export class VercelClient {
   private baseURL = 'https://api.vercel.com';
   private apiVersion = 'v9';
 

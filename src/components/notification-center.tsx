@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { notificationManager } from '@/lib/notifications/notification-manager';
-import { Notification } from '@/lib/notifications/types';
+import type { Notification } from '@/lib/notifications/types';
 import { formatDistanceToNow } from 'date-fns';
 
 export function NotificationCenter() {

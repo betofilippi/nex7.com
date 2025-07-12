@@ -72,7 +72,7 @@ export class VercelService {
     const { envs } = await this.client.listEnvVariables(projectId);
     
     // Create a map of existing variables
-    const existingVars = new Map(envs.map(env => [env.key, env]));
+    const existingVars = new Map<string, VercelEnv>(envs.map(env => [env.key, env]));
     
     // Update or create variables
     for (const [key, value] of Object.entries(variables)) {

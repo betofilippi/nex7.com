@@ -1,4 +1,4 @@
-import { Notification } from './types';
+import type { Notification } from './types';
 import crypto from 'crypto';
 
 export class WebhookService {

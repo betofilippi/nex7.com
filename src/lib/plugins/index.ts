@@ -1,10 +1,13 @@
+// Export all types (interfaces and enums)
 export * from './types';
-export * from './plugin-loader';
-export * from './plugin-registry';
-export * from './plugin-sandbox';
-export { PluginAPI as PluginAPIClass } from './plugin-api';
-export { PluginStorage as PluginStorageClass } from './plugin-storage';
-export * from './plugin-marketplace';
+
+// Export classes with explicit names to avoid conflicts with interfaces
+export { PluginLoader } from './plugin-loader';
+export { PluginRegistry } from './plugin-registry';
+export { PluginSandbox } from './plugin-sandbox';
+export { PluginAPI as PluginAPIImpl } from './plugin-api';
+export { PluginStorage as PluginStorageImpl } from './plugin-storage';
+export { PluginMarketplace, type MarketplaceFilters } from './plugin-marketplace';
 
 import { PluginLoader } from './plugin-loader';
 import { PluginRegistry } from './plugin-registry';
