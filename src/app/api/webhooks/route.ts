@@ -62,7 +62,7 @@ export const POST = createSecureApiHandler(
         return NextResponse.json({
           success: false,
           error: 'Validation failed',
-          details: error.errors,
+          details: error.issues,
         }, { status: 400 });
       }
       

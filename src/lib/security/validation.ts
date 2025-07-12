@@ -87,7 +87,7 @@ export const fileValidators = {
 export function formatValidationErrors(error: ZodError): Record<string, string[]> {
   const errors: Record<string, string[]> = {};
   
-  error.errors.forEach((err) => {
+  error.issues.forEach((err) => {
     const field = err.path.join('.');
     if (!errors[field]) {
       errors[field] = [];
