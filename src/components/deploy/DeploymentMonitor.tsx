@@ -75,7 +75,7 @@ const DeploymentMonitor: React.FC<DeploymentMonitorProps> = ({
   const logsEndRef = useRef<HTMLDivElement>(null);
   const [logs, setLogs] = useState<BuildLog[]>([]);
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([]);
-  const [deploymentHistory, setDeploymentHistory] = useState<DeploymentRecord[]>([]);
+  const [deploymentHistory, _setDeploymentHistory] = useState<DeploymentRecord[]>([]);
   const [isLive, setIsLive] = useState(true);
   const [selectedTab, setSelectedTab] = useState('logs');
 
