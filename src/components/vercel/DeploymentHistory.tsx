@@ -251,12 +251,12 @@ export default function DeploymentHistory({
                       {deployment.meta?.githubCommitRef ? (
                         <div className="flex items-center gap-2 text-muted-foreground col-span-2">
                           <GitBranch className="h-3 w-3" />
-                          <span>{deployment.meta.githubCommitRef}</span>
+                          <span>{String(deployment.meta.githubCommitRef)}</span>
                           {deployment.meta?.githubCommitSha && (
                             <>
                               <GitCommit className="h-3 w-3" />
                               <span className="font-mono">
-                                {deployment.meta.githubCommitSha.slice(0, 7)}
+                                {String(deployment.meta.githubCommitSha).slice(0, 7)}
                               </span>
                             </>
                           )}
