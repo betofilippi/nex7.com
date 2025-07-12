@@ -3,7 +3,7 @@ export * from './plugin-loader';
 export * from './plugin-registry';
 export * from './plugin-sandbox';
 export { PluginAPI as PluginAPIClass } from './plugin-api';
-export * from './plugin-storage';
+export { PluginStorage as PluginStorageClass } from './plugin-storage';
 export * from './plugin-marketplace';
 
 import { PluginLoader } from './plugin-loader';
