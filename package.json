@@ -60,6 +60,14 @@
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
+  "overrides": {
+    "storybook": "^9.0.16",
+    "@storybook/addon-essentials": "^9.0.16",
+    "@storybook/addon-docs": "^9.0.16",
+    "@storybook/addon-actions": "^9.0.16",
+    "@storybook/addon-backgrounds": "^9.0.16",
+    "@storybook/addon-controls": "^9.0.16"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.56.0",
     "@hookform/resolvers": "^5.1.1",
