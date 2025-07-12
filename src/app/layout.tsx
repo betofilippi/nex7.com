@@ -79,66 +79,6 @@ export default function RootLayout({
           </AuthProvider>
         </AccessibilityProvider>
         
-        {/* Global CSS custom properties for accessibility */}
-        <style jsx global>{`
-          :root {
-            --base-font-size: 16px;
-            --animation-duration: 0.2s;
-            --transition-duration: 0.15s;
-          }
-          
-          .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-          }
-          
-          .focus-visible *:focus-visible {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
-          }
-          
-          .high-contrast {
-            filter: contrast(1.5);
-          }
-          
-          @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-              animation-duration: 0.01ms !important;
-              animation-iteration-count: 1 !important;
-              transition-duration: 0.01ms !important;
-              scroll-behavior: auto !important;
-            }
-          }
-          
-          @media (prefers-contrast: high) {
-            :root {
-              --contrast-multiplier: 1.5;
-            }
-          }
-          
-          /* Print styles */
-          @media print {
-            .no-print {
-              display: none !important;
-            }
-            
-            body {
-              font-size: 12pt;
-              line-height: 1.4;
-              color: black;
-              background: white;
-            }
-          }
-        `}</style>
       </body>
     </html>
   )
