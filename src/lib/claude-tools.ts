@@ -95,13 +95,16 @@ export async function bashTool(input: { command: string; timeout?: number }): Pr
       }
     };
   } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    const execError = error as any; // Type assertion for exec error properties
+    
     return { 
       success: false, 
-      error: error.message,
+      error: errorMessage,
       data: {
-        stdout: error.stdout?.trim(),
-        stderr: error.stderr?.trim(),
-        code: error.code,
+        stdout: execError.stdout?.trim(),
+        stderr: execError.stderr?.trim(),
+        code: execError.code,
       }
     };
   }
