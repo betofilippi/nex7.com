@@ -215,3 +215,5 @@ export const AgentSystemDemo: React.FC<AgentSystemDemoProps> = ({ apiKey }) => {
     </div>
   );
 };
+
+export default AgentSystemDemo;

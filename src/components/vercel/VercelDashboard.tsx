@@ -421,3 +421,5 @@ export function VercelDashboard({ isAuthenticated: initialAuth }: VercelDashboar
     </div>
   )
 }
+
+export default VercelDashboard;
