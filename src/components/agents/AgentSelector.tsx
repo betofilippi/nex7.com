@@ -63,8 +63,7 @@ const AgentCard: React.FC<{
         backgroundColor: isActive ? agent.color + '10' : 'white',
         borderColor: agent.color,
         borderWidth: isActive ? '2px' : '1px',
-        borderStyle: 'solid',
-        ringColor: agent.color
+        borderStyle: 'solid'
       }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}

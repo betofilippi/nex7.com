@@ -8,7 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "lint:fix": "next lint --fix"
+    "lint:fix": "next lint --fix",
+    "analyze": "node scripts/analyze-code.js",
+    "analyze:fix": "node scripts/analyze-code.js --fix",
+    "analyze:multi": "node scripts/multi-agent-analyzer.js",
+    "analyze:full": "npm run analyze:multi && npm run analyze",
+    "pre-deploy": "bash scripts/pre-deploy-check.sh",
+    "vercel:build": "npm run pre-deploy && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.56.0",
