@@ -345,13 +345,14 @@ export const measureFunctionPerformance = <T extends any[], R>(
 
 export const measureAsyncFunctionPerformance = async <T extends any[], R>(
   fn: (...args: T) => Promise<R>,
+  args: T,
   iterations: number = 100
 ): Promise<{ averageTime: number; totalTime: number; iterations: number }> => {
   const times: number[] = [];
   
   for (let i = 0; i < iterations; i++) {
     const start = performance.now();
-    await fn();
+    await fn(...args);
     const end = performance.now();
     times.push(end - start);
   }
