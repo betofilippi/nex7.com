@@ -338,7 +338,7 @@ export function DeploymentMonitor({
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Target</p>
               <p className="text-sm font-medium">
-                {deployment.meta?.githubCommitRef || 'Production'}
+                {String(deployment.meta?.githubCommitRef || 'Production')}
               </p>
             </div>
             <div className="space-y-1">
