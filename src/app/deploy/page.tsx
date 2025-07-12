@@ -181,7 +181,7 @@ export default function DeployPage() {
           <TabsContent value="monitor">
             <DeploymentMonitor
               deploymentId="demo-deployment"
-              onErrorDetected={(error) => setCurrentError(error)}
+              onErrorDetected={(error) => setCurrentError(error as ErrorInfo)}
             />
           </TabsContent>
 
