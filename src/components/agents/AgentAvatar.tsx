@@ -89,7 +89,7 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
           borderStyle: 'solid',
           borderColor: agent.color + '40'
         }}
-        animate={moodAnimations[currentMood] || {}}
+        animate={moodAnimations[currentMood as keyof typeof moodAnimations] || {}}
         whileHover={onClick ? { scale: 1.1 } : {}}
         whileTap={onClick ? { scale: 0.95 } : {}}
       >
