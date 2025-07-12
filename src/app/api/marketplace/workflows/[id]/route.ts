@@ -5,8 +5,9 @@ const marketplace = WorkflowMarketplace.getInstance();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const workflow = marketplace.getWorkflow(params.id);
     
@@ -29,8 +30,9 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const body = await request.json();
     const { action, userId } = body;

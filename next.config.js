@@ -6,12 +6,6 @@ const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Ignore build errors from development dependencies
-  typescript: {
-    ignoreBuildErrors: process.env.NODE_ENV === 'production',
-  },
-  eslint: {
-    ignoreDuringBuilds: process.env.NODE_ENV === 'production',
-  },
   reactStrictMode: true,
   poweredByHeader: false,
   
@@ -145,8 +139,9 @@ const nextConfig = {
     ];
   },
   
+  serverExternalPackages: ['@xenova/transformers'],
+  
   experimental: {
-    serverComponentsExternalPackages: ['@xenova/transformers'],
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
     turbo: {
       rules: {
