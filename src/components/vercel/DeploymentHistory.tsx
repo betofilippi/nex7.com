@@ -248,7 +248,7 @@ export default function DeploymentHistory({
                         <span>{getDuration(deployment)}</span>
                       </div>
 
-                      {deployment.meta?.githubCommitRef && (
+                      {deployment.meta?.githubCommitRef ? (
                         <div className="flex items-center gap-2 text-muted-foreground col-span-2">
                           <GitBranch className="h-3 w-3" />
                           <span>{deployment.meta.githubCommitRef}</span>
@@ -261,14 +261,14 @@ export default function DeploymentHistory({
                             </>
                           )}
                         </div>
-                      )}
+                      ) : null}
 
-                      {deployment.creator && (
+                      {deployment.creator ? (
                         <div className="flex items-center gap-2 text-muted-foreground col-span-2">
                           <User className="h-3 w-3" />
                           <span>{deployment.creator.username || deployment.creator.email}</span>
                         </div>
-                      )}
+                      ) : null}
                     </div>
 
                     {deployment.state === 'ERROR' && deployment.aliasError && (
