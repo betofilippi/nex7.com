@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const { message, conversationId, tools, stream } = body;
 
     // Get client IP for rate limiting
-    const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     
     // Use appropriate rate limiter
     const rateLimiter = stream ? streamRateLimiter : apiRateLimiter;
