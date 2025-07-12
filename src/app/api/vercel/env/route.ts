@@ -131,11 +131,11 @@ export async function POST(request: NextRequest) {
           })
         );
 
-        const created = results
+        const created = (results as PromiseSettledResult<any>[])
           .filter((r) => r.status === 'fulfilled')
           .map((r) => (r as PromiseFulfilledResult<any>).value);
         
-        const failed = results
+        const failed = (results as PromiseSettledResult<any>[])
           .filter((r) => r.status === 'rejected')
           .map((r, i) => ({
             variable: bulkVars[i],
