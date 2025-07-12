@@ -238,13 +238,11 @@ export default function DeploymentHistory({
                     </div>
 
                     <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                      {/* Time info */}
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="h-3 w-3" />
                         <span>{getRelativeTime(deployment.createdAt)}</span>
                       </div>
 
-                      {/* Duration */}
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         <span>{getDuration(deployment)}</span>
