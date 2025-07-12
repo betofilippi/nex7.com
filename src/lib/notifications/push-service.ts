@@ -1,4 +1,4 @@
-import { Notification, PushSubscription } from './types';
+import type { Notification, PushSubscription } from './types';
 
 export class PushService {
   private subscriptions: Map<string, PushSubscription[]> = new Map();
