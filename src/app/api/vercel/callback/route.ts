@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import VercelClient from '../../../../lib/vercel/client';
-import { stateStore } from '../auth/route';
+import { stateStore } from '../../../../lib/vercel/state-store';
 
 const VERCEL_CLIENT_ID = process.env.VERCEL_CLIENT_ID!;
 const VERCEL_CLIENT_SECRET = process.env.VERCEL_CLIENT_SECRET!;
