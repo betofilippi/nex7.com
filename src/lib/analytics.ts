@@ -146,14 +146,14 @@ class Analytics {
           
           this.trackPerformance(
             'page_load_time',
-            nav.loadEventEnd - nav.navigationStart,
-            nav.loadEventEnd - nav.navigationStart < 2000 ? 'good' : 'poor'
+            nav.loadEventEnd - nav.fetchStart,
+            nav.loadEventEnd - nav.fetchStart < 2000 ? 'good' : 'poor'
           );
 
           this.trackPerformance(
             'dom_content_loaded',
-            nav.domContentLoadedEventEnd - nav.navigationStart,
-            nav.domContentLoadedEventEnd - nav.navigationStart < 1500 ? 'good' : 'poor'
+            nav.domContentLoadedEventEnd - nav.fetchStart,
+            nav.domContentLoadedEventEnd - nav.fetchStart < 1500 ? 'good' : 'poor'
           );
         }
       });
