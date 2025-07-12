@@ -60,7 +60,8 @@ export function sanitizeHtml(input: string): string {
 export function sanitizeSqlInput(input: string): string {
   // Remove or escape potentially dangerous characters
   return input
-    .replace(/[';\\--]/g, '') // Remove single quotes, semicolons, backslashes, and SQL comments
+    .replace(/[';\\-]/g, '') // Remove single quotes, semicolons, backslashes, and dashes
+    .replace(/--/g, '') // Remove SQL comment markers
     .trim();
 }
 
