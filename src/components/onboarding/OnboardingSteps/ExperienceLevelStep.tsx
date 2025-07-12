@@ -90,7 +90,7 @@ const ExperienceLevelStep: React.FC<ExperienceLevelStepProps> = ({
                   ? 'ring-2 ring-primary shadow-lg'
                   : 'hover:shadow-md'
               }`}
-              onClick={() => handleSelect(level.id as string)}
+              onClick={() => handleSelect(level.id as 'beginner' | 'intermediate' | 'advanced')}
             >
               <CardContent className="p-6">
                 <div
