@@ -9,14 +9,14 @@ const JWT_REFRESH_SECRET = new TextEncoder().encode(
   process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key-change-this-in-production'
 );
 
-export interface JWTPayload {
+export interface CustomJWTPayload {
   userId: string;
   email: string;
   name?: string;
   picture?: string;
 }
 
-export async function signJWT(payload: JWTPayload, expiresIn: string = '15m'): Promise<string> {
+export async function signJWT(payload: CustomJWTPayload, expiresIn: string = '15m'): Promise<string> {
   const token = await new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -36,10 +36,10 @@ export async function signRefreshToken(payload: { userId: string }, expiresIn: s
   return token;
 }
 
-export async function verifyJWT(token: string): Promise<JWTPayload> {
+export async function verifyJWT(token: string): Promise<CustomJWTPayload> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as JWTPayload;
+    return payload as CustomJWTPayload;
   } catch {
     throw new Error('Invalid token');
   }
