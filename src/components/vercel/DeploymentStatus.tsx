@@ -200,8 +200,7 @@ export default function DeploymentStatus({
           </div>
         </div>
 
-        {/* Progress Bar */}
-        {status.progress && (
+        {status.progress ? (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Build Progress</span>
@@ -209,36 +208,33 @@ export default function DeploymentStatus({
             </div>
             <Progress value={progress} className="h-2" />
           </div>
-        )}
+        ) : null}
 
-        {/* Creator Info */}
-        {deployment.creator && (
+        {deployment.creator ? (
           <div className="flex items-center gap-2 text-sm">
             <User className="h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">Deployed by</span>
             <span className="font-medium">{deployment.creator.username || deployment.creator.email}</span>
           </div>
-        )}
+        ) : null}
 
-        {/* Git Info */}
-        {deployment.meta?.githubCommitRef && (
+        {deployment.meta?.githubCommitRef ? (
           <div className="flex items-center gap-2 text-sm">
             <GitBranch className="h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">Branch:</span>
             <span className="font-medium">{deployment.meta.githubCommitRef}</span>
           </div>
-        )}
+        ) : null}
 
-        {/* Actions */}
         <div className="flex gap-2 pt-2">
-          {deployment.url && deployment.state === 'READY' && (
+          {deployment.url && deployment.state === 'READY' ? (
             <Button size="sm" variant="outline" className="flex-1" asChild>
               <a href={`https://${deployment.url}`} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Preview
               </a>
             </Button>
-          )}
+          ) : null}
           <Button 
             size="sm" 
             variant="outline" 
@@ -247,22 +243,21 @@ export default function DeploymentStatus({
           >
             View Logs
           </Button>
-          {deployment.inspectorUrl && (
+          {deployment.inspectorUrl ? (
             <Button size="sm" variant="outline" className="flex-1" asChild>
               <a href={deployment.inspectorUrl} target="_blank" rel="noopener noreferrer">
                 Inspector
               </a>
             </Button>
-          )}
+          ) : null}
         </div>
 
-        {/* Error Message */}
-        {deployment.state === 'ERROR' && deployment.aliasError && (
+        {deployment.state === 'ERROR' && deployment.aliasError ? (
           <div className="p-3 rounded-lg bg-destructive/10 text-sm">
             <p className="font-medium text-destructive mb-1">Error: {deployment.aliasError.code}</p>
             <p className="text-muted-foreground">{deployment.aliasError.message}</p>
           </div>
-        )}
+        ) : null}
       </CardContent>
     </Card>
   );
