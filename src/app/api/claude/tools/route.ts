@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Create tool results message
-      const toolResultsMessage = toolCalls.map(tc => ({
+      const toolResultsMessage = toolCalls.map((tc: any) => ({
         type: 'tool_result',
         tool_use_id: tc.id,
         content: tc.error ? `Error: ${tc.error}` : JSON.stringify(tc.result),
