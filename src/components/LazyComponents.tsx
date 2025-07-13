@@ -3,8 +3,6 @@
 import { lazy, Suspense } from 'react';
 
 // Lazy load heavy components
-export const LazyAgentSystemDemo = lazy(() => import('./agents/AgentSystemDemo'));
-export const LazyAnalyticsDashboard = lazy(() => import('./analytics-dashboard'));
 export const LazyDeploymentPipeline = lazy(() => import('./deploy/DeploymentPipeline'));
 
 // Loading fallback component
@@ -18,18 +16,6 @@ const LoadingFallback = ({ message = 'Loading...' }: { message?: string }) => (
 );
 
 // Wrapper components with Suspense
-export const SuspendedAgentSystemDemo = (props: any) => (
-  <Suspense fallback={<LoadingFallback message="Loading Agent System..." />}>
-    <LazyAgentSystemDemo {...props} />
-  </Suspense>
-);
-
-export const SuspendedAnalyticsDashboard = (props: any) => (
-  <Suspense fallback={<LoadingFallback message="Loading Analytics..." />}>
-    <LazyAnalyticsDashboard {...props} />
-  </Suspense>
-);
-
 export const SuspendedDeploymentPipeline = (props: any) => (
   <Suspense fallback={<LoadingFallback message="Loading Deployment Pipeline..." />}>
     <LazyDeploymentPipeline {...props} />
