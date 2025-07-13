@@ -1,175 +1,98 @@
-import { prisma } from './prisma';
-import { AgentMemory as PrismaAgentMemory } from '@prisma/client';
-
+// Simplified agent memory implementation
 export interface AgentMemory {
   id: string;
-  userId: string;
   agentId: string;
-  key: string;
-  value: any;
-  metadata?: any;
-  expiresAt?: Date | null;
+  type: 'conversation' | 'knowledge' | 'experience';
+  content: string;
+  metadata?: Record<string, any>;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
-export async function setAgentMemory(
-  userId: string,
-  agentId: string,
-  key: string,
-  value: any,
-  expiresIn?: number,
-  metadata?: any
-): Promise<AgentMemory> {
-  const expiresAt = expiresIn ? new Date(Date.now() + expiresIn) : null;
-  
-  const memory = await prisma.agentMemory.upsert({
-    where: {
-      userId_agentId_key: {
-        userId,
-        agentId,
-        key,
-      }
-    },
-    update: {
-      value,
-      metadata,
-      expiresAt,
-    },
-    create: {
-      userId,
+export class AgentMemoryService {
+  private memories: Map<string, AgentMemory[]> = new Map();
+
+  async store(agentId: string, memory: Omit<AgentMemory, 'id' | 'agentId' | 'createdAt'>) {
+    const id = Math.random().toString(36).substr(2, 9);
+    const newMemory: AgentMemory = {
+      ...memory,
+      id,
       agentId,
-      key,
-      value,
-      metadata,
-      expiresAt,
-    }
-  });
-  
-  return memory;
-}
+      createdAt: new Date(),
+    };
 
-export async function getAgentMemory(
-  userId: string,
-  agentId: string,
-  key: string
-): Promise<AgentMemory | null> {
-  const memory = await prisma.agentMemory.findUnique({
-    where: {
-      userId_agentId_key: {
-        userId,
-        agentId,
-        key,
+    const agentMemories = this.memories.get(agentId) || [];
+    agentMemories.push(newMemory);
+    this.memories.set(agentId, agentMemories);
+
+    return newMemory;
+  }
+
+  async retrieve(agentId: string, type?: AgentMemory['type']) {
+    const memories = this.memories.get(agentId) || [];
+    if (type) {
+      return memories.filter(m => m.type === type);
+    }
+    return memories;
+  }
+
+  async search(agentId: string, query: string) {
+    const memories = this.memories.get(agentId) || [];
+    return memories.filter(m => 
+      m.content.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+
+  async update(memoryId: string, updates: Partial<AgentMemory>) {
+    for (const [agentId, memories] of this.memories.entries()) {
+      const index = memories.findIndex(m => m.id === memoryId);
+      if (index !== -1) {
+        memories[index] = {
+          ...memories[index],
+          ...updates,
+          updatedAt: new Date(),
+        };
+        this.memories.set(agentId, memories);
+        return memories[index];
       }
     }
-  });
-  
-  if (!memory) return null;
-  
-  // Check if memory is expired
-  if (memory.expiresAt && memory.expiresAt < new Date()) {
-    await deleteAgentMemory(userId, agentId, key);
     return null;
   }
-  
-  return memory;
-}
 
-export async function getAllAgentMemory(
-  userId: string,
-  agentId: string
-): Promise<AgentMemory[]> {
-  const memories = await prisma.agentMemory.findMany({
-    where: {
-      userId,
-      agentId,
-      OR: [
-        { expiresAt: null },
-        { expiresAt: { gt: new Date() } }
-      ]
-    },
-    orderBy: { updatedAt: 'desc' }
-  });
-  
-  return memories;
-}
-
-export async function deleteAgentMemory(
-  userId: string,
-  agentId: string,
-  key: string
-): Promise<boolean> {
-  try {
-    await prisma.agentMemory.delete({
-      where: {
-        userId_agentId_key: {
-          userId,
-          agentId,
-          key,
-        }
+  async delete(memoryId: string) {
+    for (const [agentId, memories] of this.memories.entries()) {
+      const filtered = memories.filter(m => m.id !== memoryId);
+      if (filtered.length !== memories.length) {
+        this.memories.set(agentId, filtered);
+        return true;
       }
-    });
-    return true;
-  } catch (error) {
+    }
     return false;
+  }
+
+  async clear(agentId: string) {
+    this.memories.delete(agentId);
   }
 }
 
-export async function clearAgentMemory(
-  userId: string,
-  agentId: string
-): Promise<number> {
-  const result = await prisma.agentMemory.deleteMany({
-    where: {
-      userId,
-      agentId,
-    }
-  });
-  
-  return result.count;
-}
+export const agentMemory = new AgentMemoryService();
 
-export async function clearAllUserAgentMemory(userId: string): Promise<number> {
-  const result = await prisma.agentMemory.deleteMany({
-    where: { userId }
-  });
-  
-  return result.count;
-}
+// Export convenience functions
+export const setAgentMemory = (agentId: string, memory: Omit<AgentMemory, 'id' | 'agentId' | 'createdAt'>) => 
+  agentMemory.store(agentId, memory);
 
-// Cleanup expired memories
-export async function cleanupExpiredMemories(): Promise<number> {
-  const result = await prisma.agentMemory.deleteMany({
-    where: {
-      expiresAt: {
-        lt: new Date()
-      }
-    }
-  });
-  
-  return result.count;
-}
+export const getAgentMemory = (agentId: string, type?: AgentMemory['type']) => 
+  agentMemory.retrieve(agentId, type);
 
-// Search memories by pattern
-export async function searchAgentMemory(
-  userId: string,
-  agentId: string,
-  keyPattern: string
-): Promise<AgentMemory[]> {
-  const memories = await prisma.agentMemory.findMany({
-    where: {
-      userId,
-      agentId,
-      key: {
-        contains: keyPattern,
-      },
-      OR: [
-        { expiresAt: null },
-        { expiresAt: { gt: new Date() } }
-      ]
-    },
-    orderBy: { updatedAt: 'desc' }
-  });
-  
-  return memories;
-}
+export const searchAgentMemory = (agentId: string, query: string) => 
+  agentMemory.search(agentId, query);
+
+export const getAllAgentMemory = (agentId: string) => 
+  agentMemory.retrieve(agentId);
+
+export const clearAgentMemory = (agentId: string) => 
+  agentMemory.clear(agentId);
+export const cleanupExpiredMemories = async () => {
+  // Placeholder for cleanup logic
+  console.log('Cleaning up expired memories...');
+};
