@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "lib": ["dom", "dom.iterable", "es2015", "es2017", "es2018", "es2020", "es2020.promise"],
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "ES6"],
     "allowJs": true,
     "skipLibCheck": true,
-    "noImplicitAny": false,
-    "skipDefaultLibCheck": true,
-    "typeRoots": [],
     "strict": false,
     "noEmit": true,
     "esModuleInterop": true,
@@ -26,16 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "global.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "e2e/**/*",
-    ".storybook"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
